@@ -5,10 +5,24 @@
  */
 package Models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Yannick van Leeuwen
  */
-public class CheckReply {
+public class CheckReply implements Serializable  {
+    private boolean answer;
+    
+    public CheckReply()
+    {
+        
+    }
+    
+    public CheckReply(boolean answer)
+    {
+        this.answer = answer;
+    }
+    
     
 }
