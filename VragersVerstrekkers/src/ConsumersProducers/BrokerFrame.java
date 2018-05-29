@@ -41,9 +41,9 @@ public class BrokerFrame extends JFrame{
     //Gateway ing = new Gateway("INGBank.BankInterestReply", "INGBank.BankInterestRequest");
     private List<Validator> validators;
     
-    Gateway abn;
-    Gateway rabo;
-    Gateway ing;
+    Gateway one;
+    Gateway two;
+    Gateway three;
     Gateway four;
     Gateway five;
     Gateway six;
@@ -71,6 +71,12 @@ public class BrokerFrame extends JFrame{
      */
     public BrokerFrame(){
        validators = new ArrayList<>();
+       one = new Gateway("ONE.CheckFinanciering", "ONE.Checked") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+            }
+        };
        
 //        abn = new Gateway("ABNBank.BankInterestRequest", "ABNBank.BankInterestReply") {
 //            @Override
@@ -109,7 +115,7 @@ public class BrokerFrame extends JFrame{
                 //LoanRequest request = (LoanRequest) rTwo.getRequest();
                 double b = checkFinanciering.getBedrag();
                 String s = "Debug";
-                
+                one.postMessage(rTwo);
 //                Validator v = new Validator(bankInterestRequest.getHash());
 //                if(loanRequest.getAmount() >= 200000 && loanRequest.getAmount() <= 300000 && loanRequest.getTime() <= 20)
 //                {
@@ -130,7 +136,7 @@ public class BrokerFrame extends JFrame{
             }
         };
         
-        setTitle("Loan Broker");
+        setTitle("Bemiddelaar");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();

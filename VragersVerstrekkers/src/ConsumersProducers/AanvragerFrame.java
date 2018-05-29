@@ -74,7 +74,7 @@ public class AanvragerFrame extends JFrame {
             }
         };
 
-        setTitle("Loan Client");
+        setTitle("Aanvrager");
         TypeFinanciering defaultt = new TypeFinanciering(0, "Selecteer Type");
         TypeFinanciering typeOne = new TypeFinanciering(1, "Type een");
         TypeFinanciering typeTwo = new TypeFinanciering(2, "Type two");

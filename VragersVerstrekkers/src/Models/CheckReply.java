@@ -13,15 +13,41 @@ import java.io.Serializable;
  */
 public class CheckReply implements Serializable  {
     private boolean answer;
+    private String sender;
+    private String hash;
     
     public CheckReply()
     {
         
     }
     
-    public CheckReply(boolean answer)
+    public CheckReply(boolean answer, String sender)
     {
         this.answer = answer;
+    }
+
+    public boolean isAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(boolean answer) {
+        this.answer = answer;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
     
     
