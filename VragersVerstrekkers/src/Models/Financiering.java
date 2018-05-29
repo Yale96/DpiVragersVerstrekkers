@@ -12,40 +12,30 @@ import java.io.Serializable;
  * @author yanni
  */
 public class Financiering implements Serializable  {
-    private long id;
     private double bedrag;
     private String samenvatting;
     private String omschrijving;
     private TypeFinanciering typeFinanciering;
+    private String hash;
     
     public Financiering()
     {
         
     }
     
-    public Financiering(long id, double bedrag, String samenvatting, TypeFinanciering typeFinanciering)
+    public Financiering(double bedrag, String samenvatting, TypeFinanciering typeFinanciering)
     {
-        this.id = id;
         this.bedrag = bedrag;
         this.samenvatting = samenvatting;
         this.typeFinanciering = typeFinanciering;
     }
     
-    public Financiering(long id, double bedrag, String samenvatting, String omschrijving, TypeFinanciering typeFinanciering)
+    public Financiering(double bedrag, String samenvatting, String omschrijving, TypeFinanciering typeFinanciering)
     {
-        this.id = id;
         this.bedrag = bedrag;
         this.samenvatting = samenvatting;
         this.omschrijving = omschrijving;
         this.typeFinanciering = typeFinanciering;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public double getBedrag() {
@@ -78,5 +68,19 @@ public class Financiering implements Serializable  {
 
     public void setTypeFinanciering(TypeFinanciering typeFinanciering) {
         this.typeFinanciering = typeFinanciering;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Bedrag: " + bedrag + ", samenvatting: " + samenvatting + ", omschrijving: " + omschrijving + ", type financiering: " + typeFinanciering;
     }
 }

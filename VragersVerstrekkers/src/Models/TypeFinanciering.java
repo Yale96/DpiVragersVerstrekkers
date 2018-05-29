@@ -41,4 +41,10 @@ public class TypeFinanciering implements Serializable  {
     public void setOmschrijving(String omschrijving) {
         this.omschrijving = omschrijving;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Nummer: " + nummer + ", Omschrijving: " + omschrijving;
+    }
 }
