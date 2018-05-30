@@ -39,6 +39,7 @@ public class VerstrekkerFrame extends JFrame {
     private JComboBox<String> tfDropdown;
     private JPanel contentPane;
     private JTextField tfReply;
+    private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
 
     private Gateway gateway;
@@ -122,6 +123,25 @@ public class VerstrekkerFrame extends JFrame {
         gbc_tfReply.gridy = 1;
 
         contentPane.add(tfReply, gbc_tfReply);
+        
+        JLabel lblSender = new JLabel("type reply");
+        GridBagConstraints gbc_lblSender = new GridBagConstraints();
+        gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
+        gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+        gbc_lblNewLabel.gridx = 0;
+        gbc_lblNewLabel.gridy = 2;
+
+        contentPane.add(lblSender, gbc_lblSender);
+
+        tfSender = new JTextField();
+        GridBagConstraints gdbc_tfSender = new GridBagConstraints();
+        gbc_tfReply.gridwidth = 2;
+        gbc_tfReply.insets = new Insets(0, 0, 0, 5);
+        gbc_tfReply.fill = GridBagConstraints.HORIZONTAL;
+        gbc_tfReply.gridx = 1;
+        gbc_tfReply.gridy = 2;
+
+        contentPane.add(tfSender, gdbc_tfSender);
         
         JLabel lblDropdown = new JLabel("Antwoord");
         GridBagConstraints gbc_lblDropdown = new GridBagConstraints();
