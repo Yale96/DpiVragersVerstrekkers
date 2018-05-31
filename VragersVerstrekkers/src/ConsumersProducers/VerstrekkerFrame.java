@@ -7,9 +7,12 @@ package ConsumersProducers;
 
 import Models.CheckFinanciering;
 import Models.CheckReply;
+import Models.CheckedFinanciering;
 import Models.RequestReply;
 import Models.TypeFinanciering;
+import Utils.ConsumeTopic;
 import Utils.Gateway;
+import Utils.GatewayTopic;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -44,6 +47,8 @@ public class VerstrekkerFrame extends JFrame {
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
 
     private Gateway gateway;
+    private GatewayTopic gatewayTopic;
+    private GatewayTopic gatewayTopicTwo;
 
     /**
      * Launch the application.
@@ -71,8 +76,22 @@ public class VerstrekkerFrame extends JFrame {
         gateway = new Gateway("ONE.Checked", "ONE.CheckFinanciering") {
             @Override
             public void messageReceived(RequestReply rr) {
-                listModel.addElement(rr);
+                
             }
+        };
+        gatewayTopicTwo = new GatewayTopic("second") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                
+            }
+        };
+        gatewayTopic = new GatewayTopic("first") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                CheckFinanciering checkFinanciering = (CheckFinanciering) rr.getRequest();
+                listModel.addElement(rr);
+                tfReply.setVisible(false);
+                }
         };
 
         setTitle("Verstrekker");
@@ -110,7 +129,7 @@ public class VerstrekkerFrame extends JFrame {
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
         gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
         gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-        gbc_lblNewLabel.gridx = 1;
+        gbc_lblNewLabel.gridx = 3;
         gbc_lblNewLabel.gridy = 0;
 
         contentPane.add(lblNewLabel, gbc_lblNewLabel);
@@ -120,8 +139,8 @@ public class VerstrekkerFrame extends JFrame {
         gbc_tfReply.gridwidth = 2;
         gbc_tfReply.insets = new Insets(0, 0, 0, 5);
         gbc_tfReply.fill = GridBagConstraints.HORIZONTAL;
-        gbc_tfReply.gridx = 0;
-        gbc_tfReply.gridy = 1;
+        gbc_tfReply.gridx = 1;
+        gbc_tfReply.gridy = 2;
 
         contentPane.add(tfReply, gbc_tfReply);
         
@@ -129,16 +148,16 @@ public class VerstrekkerFrame extends JFrame {
         GridBagConstraints gbc_lblDropdown = new GridBagConstraints();
         gbc_lblDropdown.anchor = GridBagConstraints.EAST;
         gbc_lblDropdown.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDropdown.gridx = 1;
-        gbc_lblDropdown.gridy = 1;
+        gbc_lblDropdown.gridx = 3;
+        gbc_lblDropdown.gridy = 2;
         contentPane.add(lblDropdown, gbc_lblDropdown);
         
         tfDropdown = new JComboBox<String>(types);
         GridBagConstraints tfDropdownn = new GridBagConstraints();
         tfDropdownn.insets = new Insets(0, 0, 5, 5);
         tfDropdownn.fill = GridBagConstraints.HORIZONTAL;
-        tfDropdownn.gridx = 0;
-        tfDropdownn.gridy = 2;
+        tfDropdownn.gridx = 1;
+        tfDropdownn.gridy = 3;
         contentPane.add(tfDropdown, tfDropdownn);
         tfReply.setColumns(10);
         
@@ -146,19 +165,19 @@ public class VerstrekkerFrame extends JFrame {
         GridBagConstraints gbc_lblResponder = new GridBagConstraints();
         gbc_lblDropdown.anchor = GridBagConstraints.EAST;
         gbc_lblDropdown.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDropdown.gridx = 1;
-        gbc_lblDropdown.gridy = 2;
+        gbc_lblDropdown.gridx = 3;
+        gbc_lblDropdown.gridy = 3;
         contentPane.add(lblResponder, gbc_lblResponder);
         
         tfResponder = new JComboBox<String>(responders);
         GridBagConstraints tfResponderr = new GridBagConstraints();
         tfDropdownn.insets = new Insets(0, 0, 5, 5);
         tfDropdownn.fill = GridBagConstraints.HORIZONTAL;
-        tfDropdownn.gridx = 0;
-        tfDropdownn.gridy = 3;
+        tfDropdownn.gridx = 1;
+        tfDropdownn.gridy = 4;
         contentPane.add(tfResponder, tfResponderr);
         tfReply.setColumns(10);
-
+        
         JButton btnSendReply = new JButton("send reply");
 
         btnSendReply.addActionListener(new ActionListener() {
@@ -180,7 +199,7 @@ public class VerstrekkerFrame extends JFrame {
                 if (rr != null && reply != null) {
                     rr.setReply(reply);
                     list.repaint();
-                    gateway.postMessage(rr);
+                    gatewayTopicTwo.postMessage(rr);
                 }
             }
         }

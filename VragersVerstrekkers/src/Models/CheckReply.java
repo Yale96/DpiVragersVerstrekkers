@@ -24,9 +24,10 @@ public class CheckReply implements Serializable  {
     public CheckReply(boolean answer, String sender)
     {
         this.answer = answer;
+        this.sender = sender;
     }
 
-    public boolean isAnswer() {
+    public boolean getAnswer() {
         return answer;
     }
 
@@ -50,5 +51,9 @@ public class CheckReply implements Serializable  {
         this.hash = hash;
     }
     
-    
+    @Override
+    public String toString()
+    {
+        return "Antwoord: " + answer + ", Sender: " + sender;
+    }
 }

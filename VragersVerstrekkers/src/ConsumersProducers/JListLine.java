@@ -23,6 +23,10 @@ class JListLine {
     public JListLine(Financiering financiering) {
         this.setFinanciering(financiering);
     }
+    
+    public JListLine(CheckReply financiering) {
+        this.setCheckReply(financiering);
+    }
 
     public CheckFinanciering getCheckFinanciering() {
         return checkFinanciering;

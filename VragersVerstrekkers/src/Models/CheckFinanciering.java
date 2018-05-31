@@ -60,4 +60,10 @@ public class CheckFinanciering implements Serializable  {
     public void setHash(String hash) {
         this.hash = hash;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Bedrag: " + bedrag + ", Samenvatting: " + samenvatting + ", Type financiering: " + typeFinanciering;
+    }
 }

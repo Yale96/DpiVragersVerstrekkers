@@ -48,7 +48,7 @@ public class ProduceTopic {
             @Override
             public void run() {
                 try {
-                    ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+                    ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
                     Connection connection = connectionFactory.createConnection();
                     connection.start();
 

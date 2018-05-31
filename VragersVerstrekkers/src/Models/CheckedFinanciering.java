@@ -51,4 +51,9 @@ public class CheckedFinanciering implements Serializable  {
         this.hash = hash;
     }
     
+    @Override
+    public String toString()
+    {
+        return "Bedrag: " + bedrag + ", Omschrijving: " + omschrijving;
+    }
 }

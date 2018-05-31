@@ -12,6 +12,7 @@ import Models.Financiering;
 import Models.FinancieringsReply;
 import Models.RequestReply;
 import Utils.Gateway;
+import Utils.GatewayTopic;
 import Utils.Validator;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
@@ -36,28 +37,20 @@ public class BrokerFrame extends JFrame{
     private DefaultListModel<JListLine> listModel = new DefaultListModel<JListLine>();
     private JList<JListLine> list;
     
-    
-    //Gateway abn = new Gateway("ABNBank.BankInterestReply", "ABNBank.BankInterestRequest");
-    //Gateway rabo = new Gateway("RaboBank.BankInterestReply", "RaboBank.BankInterestRequest");
-    //Gateway ing = new Gateway("INGBank.BankInterestReply", "INGBank.BankInterestRequest");
     private List<Validator> validators;
     
-    private Gateway one;
-    private Gateway two;
-    private Gateway three;
-    private Gateway four;
-    private Gateway five;
-    private Gateway six;
-    private Gateway gateway;
-    private Gateway gateway2;
-    private Gateway gateway3;
-    private Gateway gateway4;
+    private Gateway gatewayQueue;
+    private GatewayTopic gatewayTopic;
+    private GatewayTopic gatewayTopicTwo;
+   
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
+    private CheckReply checkReply;
     
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     BrokerFrame frame = new BrokerFrame();
@@ -74,10 +67,26 @@ public class BrokerFrame extends JFrame{
      */
     public BrokerFrame(){
        validators = new ArrayList<>();
-       one = new Gateway("ONE.CheckFinanciering", "ONE.Checked") {
+       gatewayQueue = new Gateway("ONE.CheckFinanciering", "ONE.Checked") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
+            }
+        };
+       gatewayTopic = new GatewayTopic("first") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+            }
+        };
+       gatewayTopicTwo = new GatewayTopic("second") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                CheckReply financiering = (CheckReply) rr.getRequest();
+                add(financiering);
+                //HIER WORDEN CHECK EN EN CHECKEDFINANCIERINGEN GEMAAKT!!!
+                //BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime());
+                checkReply = new CheckReply(financiering.getAnswer(), financiering.getSender());
             }
         };
        
@@ -102,7 +111,7 @@ public class BrokerFrame extends JFrame{
 //            }
 //        };
         
-        gateway = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
+        gatewayQueue = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
             @Override
             public void messageReceived(RequestReply rr) {
                 Financiering financiering = (Financiering) rr.getRequest();
@@ -110,7 +119,7 @@ public class BrokerFrame extends JFrame{
                 double i = financiering.getBedrag();
                 //HIER WORDEN CHECK EN EN CHECKEDFINANCIERINGEN GEMAAKT!!!
                 //BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime());
-                checkFinanciering = new CheckFinanciering(financiering.getBedrag(), financiering.getOmschrijving(), financiering.getTypeFinanciering());
+                checkFinanciering = new CheckFinanciering(financiering.getBedrag(), financiering.getSamenvatting(), financiering.getTypeFinanciering());
                 checkFinanciering.setHash(financiering.getHash());
                 checkedFinanciering = new CheckedFinanciering(financiering.getBedrag(), financiering.getOmschrijving());
                 checkedFinanciering.setHash(financiering.getHash());
@@ -120,7 +129,7 @@ public class BrokerFrame extends JFrame{
                 //LoanRequest request = (LoanRequest) rTwo.getRequest();
                 double b = checkFinanciering.getBedrag();
                 String s = "Debug";
-                one.postMessage(rTwo);
+                gatewayTopic.postMessage(rTwo);
 //                Validator v = new Validator(bankInterestRequest.getHash());
 //                if(loanRequest.getAmount() >= 200000 && loanRequest.getAmount() <= 300000 && loanRequest.getTime() <= 20)
 //                {
@@ -203,6 +212,10 @@ public class BrokerFrame extends JFrame{
     }
 
     public void add(Financiering financiering) {
+        listModel.addElement(new JListLine(financiering));
+    }
+    
+    public void add(CheckReply financiering) {
         listModel.addElement(new JListLine(financiering));
     }
 

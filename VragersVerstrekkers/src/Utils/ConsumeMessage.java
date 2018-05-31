@@ -52,7 +52,6 @@ public class ConsumeMessage {
                         }
                     }
                 }
-
             });
         } catch (Exception e) {
 

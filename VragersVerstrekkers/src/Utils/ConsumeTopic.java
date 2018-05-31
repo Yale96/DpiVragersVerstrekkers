@@ -10,6 +10,7 @@ import Models.RequestReply;
 import java.io.IOException;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -28,26 +29,24 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class ConsumeTopic {
     // URL of the JMS server
-    private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+    ActiveMQConnectionFactory connectionFactory;
+    Connection connection;
+    Session session;
+    Destination destination;
+    MessageConsumer consumer;
 
-    // Name of the topic from which we will receive messages from = " testt"
-    public ConsumeTopic(String topicName){
-        try
-        {
-            // Getting JMS connection from the server
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
-
-        Session session = connection.createSession(false,
-                Session.AUTO_ACKNOWLEDGE);
-
-        Topic topic = session.createTopic(topicName);
-
-        MessageConsumer consumer = session.createConsumer(topic);
-
-        MessageListener listner = new MessageListener() {
-            @Override
+    public ConsumeTopic(String topic) {
+        String s = "Debug";
+        connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        connectionFactory.setTrustAllPackages(true);
+        try {
+            connection = connectionFactory.createConnection();
+            connection.start();
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            destination = session.createTopic(topic);
+            consumer = session.createConsumer(destination);
+            consumer.setMessageListener(new MessageListener() {
+                @Override
                 public void onMessage(Message msg) {
                     if (msg instanceof ObjectMessage) {
                         try {
@@ -61,19 +60,9 @@ public class ConsumeTopic {
                         }
                     }
                 }
-        };
-        consumer.setMessageListener(listner);
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-        }
-        catch(JMSException e)
-        {
-            
+            });
+        } catch (Exception e) {
+
         }
     }
     

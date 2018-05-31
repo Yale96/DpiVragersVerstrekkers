@@ -15,9 +15,9 @@ public class GatewayTopic {
     private ProduceTopic producer;
     private ConsumeTopic consumer;
     
-    public GatewayTopic(String listenerTopic, String senderSenderTopic){
-        producer = new ProduceTopic(senderSenderTopic);
-        consumer = new ConsumeTopic(listenerTopic){
+    public GatewayTopic(String topic){
+        producer = new ProduceTopic(topic);
+        consumer = new ConsumeTopic(topic){
             @Override
             public void messageReceive(RequestReply rr){
                 messageReceived(rr);
