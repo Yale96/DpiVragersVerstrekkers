@@ -36,6 +36,7 @@ public class VerstrekkerFrame extends JFrame {
      *
      */
     private static final long serialVersionUID = 1L;
+    private JComboBox<String> tfResponder;
     private JComboBox<String> tfDropdown;
     private JPanel contentPane;
     private JTextField tfReply;
@@ -66,6 +67,7 @@ public class VerstrekkerFrame extends JFrame {
      */
     public VerstrekkerFrame() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
+        String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2" , "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("ONE.Checked", "ONE.CheckFinanciering") {
             @Override
             public void messageReceived(RequestReply rr) {
@@ -76,8 +78,7 @@ public class VerstrekkerFrame extends JFrame {
         setTitle("Verstrekker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setBounds(
-                100, 100, 450, 300);
+        setBounds(100, 100, 684, 619);
         contentPane = new JPanel();
 
         contentPane.setBorder(
@@ -109,8 +110,8 @@ public class VerstrekkerFrame extends JFrame {
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
         gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
         gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-        gbc_lblNewLabel.gridx = 0;
-        gbc_lblNewLabel.gridy = 1;
+        gbc_lblNewLabel.gridx = 1;
+        gbc_lblNewLabel.gridy = 0;
 
         contentPane.add(lblNewLabel, gbc_lblNewLabel);
 
@@ -119,55 +120,54 @@ public class VerstrekkerFrame extends JFrame {
         gbc_tfReply.gridwidth = 2;
         gbc_tfReply.insets = new Insets(0, 0, 0, 5);
         gbc_tfReply.fill = GridBagConstraints.HORIZONTAL;
-        gbc_tfReply.gridx = 1;
+        gbc_tfReply.gridx = 0;
         gbc_tfReply.gridy = 1;
 
         contentPane.add(tfReply, gbc_tfReply);
-        
-        JLabel lblSender = new JLabel("type reply");
-        GridBagConstraints gbc_lblSender = new GridBagConstraints();
-        gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
-        gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-        gbc_lblNewLabel.gridx = 0;
-        gbc_lblNewLabel.gridy = 2;
-
-        contentPane.add(lblSender, gbc_lblSender);
-
-        tfSender = new JTextField();
-        GridBagConstraints gdbc_tfSender = new GridBagConstraints();
-        gbc_tfReply.gridwidth = 2;
-        gbc_tfReply.insets = new Insets(0, 0, 0, 5);
-        gbc_tfReply.fill = GridBagConstraints.HORIZONTAL;
-        gbc_tfReply.gridx = 1;
-        gbc_tfReply.gridy = 2;
-
-        contentPane.add(tfSender, gdbc_tfSender);
         
         JLabel lblDropdown = new JLabel("Antwoord");
         GridBagConstraints gbc_lblDropdown = new GridBagConstraints();
         gbc_lblDropdown.anchor = GridBagConstraints.EAST;
         gbc_lblDropdown.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDropdown.gridx = 0;
-        gbc_lblDropdown.gridy = 3;
+        gbc_lblDropdown.gridx = 1;
+        gbc_lblDropdown.gridy = 1;
         contentPane.add(lblDropdown, gbc_lblDropdown);
         
         tfDropdown = new JComboBox<String>(types);
         GridBagConstraints tfDropdownn = new GridBagConstraints();
         tfDropdownn.insets = new Insets(0, 0, 5, 5);
         tfDropdownn.fill = GridBagConstraints.HORIZONTAL;
-        tfDropdownn.gridx = 1;
-        tfDropdownn.gridy = 3;
+        tfDropdownn.gridx = 0;
+        tfDropdownn.gridy = 2;
         contentPane.add(tfDropdown, tfDropdownn);
+        tfReply.setColumns(10);
+        
+        JLabel lblResponder = new JLabel("Antwoord");
+        GridBagConstraints gbc_lblResponder = new GridBagConstraints();
+        gbc_lblDropdown.anchor = GridBagConstraints.EAST;
+        gbc_lblDropdown.insets = new Insets(0, 0, 5, 5);
+        gbc_lblDropdown.gridx = 1;
+        gbc_lblDropdown.gridy = 2;
+        contentPane.add(lblResponder, gbc_lblResponder);
+        
+        tfResponder = new JComboBox<String>(responders);
+        GridBagConstraints tfResponderr = new GridBagConstraints();
+        tfDropdownn.insets = new Insets(0, 0, 5, 5);
+        tfDropdownn.fill = GridBagConstraints.HORIZONTAL;
+        tfDropdownn.gridx = 0;
+        tfDropdownn.gridy = 3;
+        contentPane.add(tfResponder, tfResponderr);
         tfReply.setColumns(10);
 
         JButton btnSendReply = new JButton("send reply");
 
         btnSendReply.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 boolean b;
                 RequestReply<CheckFinanciering, CheckReply> rr = list.getSelectedValue();
-                double interest = Double.parseDouble((tfReply.getText()));
+                //double interest = Double.parseDouble((tfReply.getText()));
                 if(tfDropdown.getSelectedItem().equals("Interessant"))
                 {
                     b = true;
