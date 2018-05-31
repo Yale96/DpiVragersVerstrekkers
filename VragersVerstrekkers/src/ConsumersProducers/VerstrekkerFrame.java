@@ -82,7 +82,7 @@ public class VerstrekkerFrame extends JFrame {
         contentPane = new JPanel();
 
         contentPane.setBorder(
-                new EmptyBorder(5, 5, 5, 5));
+                new EmptyBorder(50, 5, 200, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
         gbl_contentPane.columnWidths = new int[]{46, 31, 86, 30, 89, 0};
@@ -168,13 +168,14 @@ public class VerstrekkerFrame extends JFrame {
                 boolean b;
                 RequestReply<CheckFinanciering, CheckReply> rr = list.getSelectedValue();
                 //double interest = Double.parseDouble((tfReply.getText()));
+                String responder = tfResponder.getSelectedItem().toString();
                 if(tfDropdown.getSelectedItem().equals("Interessant"))
                 {
                     b = true;
                 }
                 else
                     b = false;
-                CheckReply reply = new CheckReply(b, "Test");
+                CheckReply reply = new CheckReply(b, responder);
                 reply.setHash(rr.getRequest().getHash());
                 if (rr != null && reply != null) {
                     rr.setReply(reply);

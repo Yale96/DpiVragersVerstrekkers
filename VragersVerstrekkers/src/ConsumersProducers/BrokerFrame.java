@@ -7,6 +7,7 @@ package ConsumersProducers;
 
 import Models.CheckFinanciering;
 import Models.CheckReply;
+import Models.CheckedFinanciering;
 import Models.Financiering;
 import Models.FinancieringsReply;
 import Models.RequestReply;
@@ -41,16 +42,18 @@ public class BrokerFrame extends JFrame{
     //Gateway ing = new Gateway("INGBank.BankInterestReply", "INGBank.BankInterestRequest");
     private List<Validator> validators;
     
-    Gateway one;
-    Gateway two;
-    Gateway three;
-    Gateway four;
-    Gateway five;
-    Gateway six;
+    private Gateway one;
+    private Gateway two;
+    private Gateway three;
+    private Gateway four;
+    private Gateway five;
+    private Gateway six;
     private Gateway gateway;
     private Gateway gateway2;
     private Gateway gateway3;
     private Gateway gateway4;
+    private CheckFinanciering checkFinanciering;
+    private CheckedFinanciering checkedFinanciering;
     
 
     public static void main(String[] args) {
@@ -107,8 +110,10 @@ public class BrokerFrame extends JFrame{
                 double i = financiering.getBedrag();
                 //HIER WORDEN CHECK EN EN CHECKEDFINANCIERINGEN GEMAAKT!!!
                 //BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime());
-                CheckFinanciering checkFinanciering = new CheckFinanciering(financiering.getBedrag(), financiering.getOmschrijving(), financiering.getTypeFinanciering());
+                checkFinanciering = new CheckFinanciering(financiering.getBedrag(), financiering.getOmschrijving(), financiering.getTypeFinanciering());
                 checkFinanciering.setHash(financiering.getHash());
+                checkedFinanciering = new CheckedFinanciering(financiering.getBedrag(), financiering.getOmschrijving());
+                checkedFinanciering.setHash(financiering.getHash());
                 add(financiering, checkFinanciering);
                 RequestReply rTwo = new RequestReply<CheckFinanciering, CheckReply>(checkFinanciering, null);
                 

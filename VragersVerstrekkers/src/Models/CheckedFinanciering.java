@@ -12,28 +12,19 @@ import java.io.Serializable;
  * @author Yannick van Leeuwen
  */
 public class CheckedFinanciering implements Serializable  {
-    private long id;
     private double bedrag;
     private String omschrijving;
+    private String hash;
     
     public CheckedFinanciering()
     {
         
     }
     
-    public CheckedFinanciering(long id, double bedrag, String omschrijving)
+    public CheckedFinanciering(double bedrag, String omschrijving)
     {
-        this.id = id;
         this.bedrag = bedrag;
         this.omschrijving = omschrijving;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public double getBedrag() {
@@ -44,11 +35,20 @@ public class CheckedFinanciering implements Serializable  {
         this.bedrag = bedrag;
     }
 
-    public String getSamenvatting() {
+    public String getOmschrijving() {
         return omschrijving;
     }
 
-    public void setSamenvatting(String omschrijving) {
+    public void setOmschrijving(String omschrijving) {
         this.omschrijving = omschrijving;
     }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+    
 }
