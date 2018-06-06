@@ -48,7 +48,7 @@ public class VerstrekkerFrame extends JFrame {
 
     private Gateway gateway;
     private GatewayTopic gatewayTopic;
-    private GatewayTopic gatewayTopicTwo;
+    private Gateway gatewayReply;
 
     /**
      * Launch the application.
@@ -73,13 +73,13 @@ public class VerstrekkerFrame extends JFrame {
     public VerstrekkerFrame() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2" , "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
-        gateway = new Gateway("ONE.Checked", "ONE.CheckFinanciering") {
+        gateway = new Gateway("first.Checked", "first.CheckFinanciering") {
             @Override
             public void messageReceived(RequestReply rr) {
                 
             }
         };
-        gatewayTopicTwo = new GatewayTopic("second") {
+        gatewayReply = new Gateway("second.Checked", "second.CheckFinanciering") {
             @Override
             public void messageReceived(RequestReply rr) {
                 
@@ -199,7 +199,7 @@ public class VerstrekkerFrame extends JFrame {
                 if (rr != null && reply != null) {
                     rr.setReply(reply);
                     list.repaint();
-                    gatewayTopicTwo.postMessage(rr);
+                    gatewayReply.postMessage(rr);
                 }
             }
         }

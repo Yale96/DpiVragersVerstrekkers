@@ -39,7 +39,8 @@ public class BrokerFrame extends JFrame{
     
     private List<Validator> validators;
     
-    private Gateway gatewayQueue;
+    private Gateway gatewayFirst;
+    private Gateway gatewaySecond;
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
    
@@ -67,10 +68,17 @@ public class BrokerFrame extends JFrame{
      */
     public BrokerFrame(){
        validators = new ArrayList<>();
-       gatewayQueue = new Gateway("ONE.CheckFinanciering", "ONE.Checked") {
+       gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
+            }
+        };
+       gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("RECEIVED ON GATEWAYSECOND!!!!!");
             }
         };
        gatewayTopic = new GatewayTopic("first") {
@@ -111,7 +119,7 @@ public class BrokerFrame extends JFrame{
 //            }
 //        };
         
-        gatewayQueue = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
+        gatewayFirst = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
             @Override
             public void messageReceived(RequestReply rr) {
                 Financiering financiering = (Financiering) rr.getRequest();
