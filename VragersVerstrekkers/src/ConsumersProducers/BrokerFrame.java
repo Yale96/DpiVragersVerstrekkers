@@ -41,12 +41,14 @@ public class BrokerFrame extends JFrame{
     
     private Gateway gatewayFirst;
     private Gateway gatewaySecond;
+    private Gateway gateWayThird;
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
    
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
     private CheckReply checkReply;
+    private List<String> checkReplyers;
     
 
     public static void main(String[] args) {
@@ -68,6 +70,7 @@ public class BrokerFrame extends JFrame{
      */
     public BrokerFrame(){
        validators = new ArrayList<>();
+       checkReplyers = new ArrayList<>();
        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked") {
             @Override
             public void messageReceived(RequestReply rr) {
@@ -79,6 +82,11 @@ public class BrokerFrame extends JFrame{
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
                 System.out.println("RECEIVED ON GATEWAYSECOND!!!!!");
+                CheckReply cr = (CheckReply) rr.getReply();
+                if(cr != null)
+                {
+                    aggregator(rr);
+                }
             }
         };
        gatewayTopic = new GatewayTopic("first") {
@@ -295,4 +303,45 @@ public class BrokerFrame extends JFrame{
 //            validators.remove(val);
 //        }
 //    }
+    
+        private void aggregator(RequestReply rr) {
+        double startval = -10;
+        Validator val = new Validator();
+        CheckFinanciering cf = (CheckFinanciering) rr.getRequest();
+        CheckReply cr = (CheckReply) rr.getReply();
+        boolean complete = false;
+        JListLine jls = getCheckRequestReply(cf);
+        //add(jls.getCheckFinanciering(), cr);
+        CheckFinanciering fr = new CheckFinanciering();
+        
+        CheckReply replys = (CheckReply) rr.getReply();
+        List<CheckReply> checkReplys = new ArrayList<>();
+        checkReplys.add(replys);
+        
+
+//        for (Validator v : validators) {
+//            if (v.getHash().equals(bire.getHash())) {
+//                val = v;
+//            }
+//        }
+        if (checkReplys.size() == 1) 
+        {
+            String ssss = "Debug";
+            RequestReply lowestInterest = new RequestReply();
+            String sss = "Debug";
+            for (CheckReply reply: checkReplys) {
+                if(reply.getAnswer() == true)
+                {
+                    //gatewaySecond.postMessage(checkedFinanciering);
+                    String doTest = "Debug";
+                    checkReplyers.add(reply.getSender());
+                }
+            }
+//            for(String s: checkReplyers)
+//            {
+//                gateWayThird  = new Gateway(s + ".VerstrekkerReply", s + ".LastBroker");
+//                gateWayThird.postMessage(checkedFinanciering);
+//            }
+        }
+    }
 }

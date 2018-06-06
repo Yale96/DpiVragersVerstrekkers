@@ -161,23 +161,6 @@ public class VerstrekkerFrame extends JFrame {
         contentPane.add(tfDropdown, tfDropdownn);
         tfReply.setColumns(10);
         
-        JLabel lblResponder = new JLabel("Antwoord");
-        GridBagConstraints gbc_lblResponder = new GridBagConstraints();
-        gbc_lblDropdown.anchor = GridBagConstraints.EAST;
-        gbc_lblDropdown.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDropdown.gridx = 3;
-        gbc_lblDropdown.gridy = 3;
-        contentPane.add(lblResponder, gbc_lblResponder);
-        
-        tfResponder = new JComboBox<String>(responders);
-        GridBagConstraints tfResponderr = new GridBagConstraints();
-        tfDropdownn.insets = new Insets(0, 0, 5, 5);
-        tfDropdownn.fill = GridBagConstraints.HORIZONTAL;
-        tfDropdownn.gridx = 1;
-        tfDropdownn.gridy = 4;
-        contentPane.add(tfResponder, tfResponderr);
-        tfReply.setColumns(10);
-        
         JButton btnSendReply = new JButton("send reply");
 
         btnSendReply.addActionListener(new ActionListener() {
@@ -187,14 +170,13 @@ public class VerstrekkerFrame extends JFrame {
                 boolean b;
                 RequestReply<CheckFinanciering, CheckReply> rr = list.getSelectedValue();
                 //double interest = Double.parseDouble((tfReply.getText()));
-                String responder = tfResponder.getSelectedItem().toString();
                 if(tfDropdown.getSelectedItem().equals("Interessant"))
                 {
                     b = true;
                 }
                 else
                     b = false;
-                CheckReply reply = new CheckReply(b, responder);
+                CheckReply reply = new CheckReply(b, getTitle());
                 reply.setHash(rr.getRequest().getHash());
                 if (rr != null && reply != null) {
                     rr.setReply(reply);

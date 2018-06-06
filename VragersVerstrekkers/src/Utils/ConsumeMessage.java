@@ -48,7 +48,7 @@ public class ConsumeMessage {
                             Financiering f = (Financiering) rr.getRequest();
                             String s = "Debug";
                         } catch (Exception e) {
-
+                            System.out.println(e.toString());
                         }
                     }
                 }
