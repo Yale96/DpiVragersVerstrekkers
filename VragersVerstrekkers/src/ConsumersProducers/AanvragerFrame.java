@@ -64,7 +64,7 @@ public class AanvragerFrame extends JFrame {
     }
 
     public AanvragerFrame(){
-        gateway = new Gateway("LoanReply.Broker", "LoanRequest.Client"){
+        gateway = new Gateway("LoanReply.Broker", "LoanRequest.Client", "Test"){
             @Override
             public void messageReceived(RequestReply rr){
                 int index = getRequestReply((Financiering) rr.getRequest());

@@ -45,7 +45,7 @@ public class VerstrekkerFrame extends JFrame {
     private JTextField tfReply;
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
-
+    private Gateway VerstrekkerEen;
     private Gateway gateway;
     private GatewayTopic gatewayTopic;
     private Gateway gatewayReply;
@@ -73,16 +73,23 @@ public class VerstrekkerFrame extends JFrame {
     public VerstrekkerFrame() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2" , "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
-        gateway = new Gateway("first.Checked", "first.CheckFinanciering") {
+        gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
             @Override
             public void messageReceived(RequestReply rr) {
                 
             }
         };
-        gatewayReply = new Gateway("second.Checked", "second.CheckFinanciering") {
+        gatewayReply = new Gateway("second.Checked", "second.CheckFinanciering", "test") {
             @Override
             public void messageReceived(RequestReply rr) {
                 
+            }
+        };
+        VerstrekkerEen = new Gateway("VerstrekkerEen.LastBroker", "VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("REICEIVED MESSAGE IN VERSTREKKER!!!!");
             }
         };
         gatewayTopic = new GatewayTopic("first") {

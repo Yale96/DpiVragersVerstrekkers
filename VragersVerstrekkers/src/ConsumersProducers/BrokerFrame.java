@@ -46,6 +46,7 @@ public class BrokerFrame extends JFrame {
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
     private Gateway VerstrekkerEen;
+    private List<Gateway> queueNames;
 
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
@@ -72,13 +73,14 @@ public class BrokerFrame extends JFrame {
     public BrokerFrame() {
         validators = new ArrayList<>();
         checkReplyers = new ArrayList<>();
-        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked") {
+        queueNames = new ArrayList<>();
+        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked", "niks") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
             }
         };
-        gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked") {
+        gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked", "niks") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -90,7 +92,7 @@ public class BrokerFrame extends JFrame {
             }
         };
         for (String s : checkReplyers) {
-            gateWayThird = new Gateway(s + ".VerstrekkerReply", s + ".LastBroker") {
+            gateWayThird = new Gateway(s + ".VerstrekkerReply", s + ".LastBroker", "niks") {
                 @Override
                 public void messageReceived(RequestReply rr) {
                     //aggregator(rr);
@@ -114,7 +116,7 @@ public class BrokerFrame extends JFrame {
             }
         };
 
-        VerstrekkerEen = new Gateway("VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen.LastBroker") {
+        VerstrekkerEen = new Gateway("VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen.LastBroker", "VerstrekkerEen") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -135,7 +137,7 @@ public class BrokerFrame extends JFrame {
 //                aggregator(rr);
 //            }
 //        };
-        gatewayFirst = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
+        gatewayFirst = new Gateway("LoanRequest.Client", "LoanReply.Broker", "Niks") {
             @Override
             public void messageReceived(RequestReply rr) {
                 Financiering financiering = (Financiering) rr.getRequest();
@@ -343,8 +345,20 @@ public class BrokerFrame extends JFrame {
             }
             for(String s: checkReplyers)
             {
-                gateWayThird.postMessage(rr);
+                findGatewayByName(s).postMessage(rr);
             }
         }
+    }
+    
+    private Gateway findGatewayByName(String name)
+    {
+        for(Gateway g: queueNames)
+        {
+            if(g.getName().equals(name))
+            {
+                return g;
+            }
+        }
+        return null;
     }
 }

@@ -16,8 +16,10 @@ import java.util.List;
 public class Gateway {
     private ProduceMessage producer;
     private ConsumeMessage consumer;
+    private String name;
     
-    public Gateway(String listenerQue, String senderQue){
+    public Gateway(String listenerQue, String senderQue, String name){
+        this.name = name;
         producer = new ProduceMessage(senderQue);
         consumer = new ConsumeMessage(listenerQue){
             @Override
@@ -34,4 +36,14 @@ public class Gateway {
     public void messageReceived(RequestReply rr){
         
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
 }
