@@ -122,7 +122,7 @@ public class BrokerFrame extends JFrame {
                 //aggregator(rr);
             }
         };
-        
+        queueNames.add(VerstrekkerEen);
 //        
 //        rabo = new Gateway("RaboBank.BankInterestRequest", "RaboBank.BankInterestReply") {
 //            @Override
@@ -314,24 +314,12 @@ public class BrokerFrame extends JFrame {
 //        }
 //    }
     private void aggregator(RequestReply rr) {
-        double startval = -10;
-        Validator val = new Validator();
-        CheckFinanciering cf = (CheckFinanciering) rr.getRequest();
-        CheckReply cr = (CheckReply) rr.getReply();
-        boolean complete = false;
-        JListLine jls = getCheckRequestReply(cf);
-        //add(jls.getCheckFinanciering(), cr);
-        CheckFinanciering fr = new CheckFinanciering();
-
+        RequestReply rTwo = new RequestReply<CheckedFinanciering, CheckFinanciering>(checkedFinanciering, null);
+        
         CheckReply replys = (CheckReply) rr.getReply();
         List<CheckReply> checkReplys = new ArrayList<>();
         checkReplys.add(replys);
 
-//        for (Validator v : validators) {
-//            if (v.getHash().equals(bire.getHash())) {
-//                val = v;
-//            }
-//        }
         if (checkReplys.size() == 1) {
             String ssss = "Debug";
             RequestReply lowestInterest = new RequestReply();
@@ -345,7 +333,7 @@ public class BrokerFrame extends JFrame {
             }
             for(String s: checkReplyers)
             {
-                findGatewayByName(s).postMessage(rr);
+                findGatewayByName(s).postMessage(rTwo);
             }
         }
     }
@@ -356,6 +344,7 @@ public class BrokerFrame extends JFrame {
         {
             if(g.getName().equals(name))
             {
+                System.out.println("GATEWAY NAME::: " + g.getName());
                 return g;
             }
         }
