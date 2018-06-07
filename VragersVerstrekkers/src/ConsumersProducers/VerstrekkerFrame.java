@@ -94,7 +94,7 @@ public class VerstrekkerFrame extends JFrame {
                 }
         };
 
-        setTitle("Verstrekker");
+        setTitle("VerstrekkerEen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(100, 100, 684, 619);

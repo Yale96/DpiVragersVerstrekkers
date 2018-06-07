@@ -31,25 +31,26 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Yannick van Leeuwen
  */
-public class BrokerFrame extends JFrame{
+public class BrokerFrame extends JFrame {
+
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private DefaultListModel<JListLine> listModel = new DefaultListModel<JListLine>();
     private JList<JListLine> list;
-    
+
     private List<Validator> validators;
-    
+
     private Gateway gatewayFirst;
     private Gateway gatewaySecond;
     private Gateway gateWayThird;
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
-   
+    private Gateway VerstrekkerEen;
+
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
     private CheckReply checkReply;
     private List<String> checkReplyers;
-    
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -68,34 +69,41 @@ public class BrokerFrame extends JFrame{
     /**
      * Create the frame.
      */
-    public BrokerFrame(){
-       validators = new ArrayList<>();
-       checkReplyers = new ArrayList<>();
-       gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked") {
+    public BrokerFrame() {
+        validators = new ArrayList<>();
+        checkReplyers = new ArrayList<>();
+        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
             }
         };
-       gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked") {
+        gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
                 System.out.println("RECEIVED ON GATEWAYSECOND!!!!!");
                 CheckReply cr = (CheckReply) rr.getReply();
-                if(cr != null)
-                {
+                if (cr != null) {
                     aggregator(rr);
                 }
             }
         };
-       gatewayTopic = new GatewayTopic("first") {
+        for (String s : checkReplyers) {
+            gateWayThird = new Gateway(s + ".VerstrekkerReply", s + ".LastBroker") {
+                @Override
+                public void messageReceived(RequestReply rr) {
+                    //aggregator(rr);
+                }
+            };
+        }
+        gatewayTopic = new GatewayTopic("first") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
             }
         };
-       gatewayTopicTwo = new GatewayTopic("second") {
+        gatewayTopicTwo = new GatewayTopic("second") {
             @Override
             public void messageReceived(RequestReply rr) {
                 CheckReply financiering = (CheckReply) rr.getRequest();
@@ -105,13 +113,14 @@ public class BrokerFrame extends JFrame{
                 checkReply = new CheckReply(financiering.getAnswer(), financiering.getSender());
             }
         };
-       
-//        abn = new Gateway("ABNBank.BankInterestRequest", "ABNBank.BankInterestReply") {
-//            @Override
-//            public void messageReceived(RequestReply rr) {
-//                aggregator(rr);
-//            }
-//        };
+
+        VerstrekkerEen = new Gateway("VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen.LastBroker") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+            }
+        };
+        
 //        
 //        rabo = new Gateway("RaboBank.BankInterestRequest", "RaboBank.BankInterestReply") {
 //            @Override
@@ -126,7 +135,6 @@ public class BrokerFrame extends JFrame{
 //                aggregator(rr);
 //            }
 //        };
-        
         gatewayFirst = new Gateway("LoanRequest.Client", "LoanReply.Broker") {
             @Override
             public void messageReceived(RequestReply rr) {
@@ -141,7 +149,7 @@ public class BrokerFrame extends JFrame{
                 checkedFinanciering.setHash(financiering.getHash());
                 add(financiering, checkFinanciering);
                 RequestReply rTwo = new RequestReply<CheckFinanciering, CheckReply>(checkFinanciering, null);
-                
+
                 //LoanRequest request = (LoanRequest) rTwo.getRequest();
                 double b = checkFinanciering.getBedrag();
                 String s = "Debug";
@@ -165,7 +173,7 @@ public class BrokerFrame extends JFrame{
 //                validators.add(v);
             }
         };
-        
+
         setTitle("Bemiddelaar");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -196,19 +204,19 @@ public class BrokerFrame extends JFrame{
 
         for (int i = 0; i < listModel.getSize(); i++) {
             JListLine rr = listModel.get(i);
-            if (rr.getFinanciering()== financiering) {
+            if (rr.getFinanciering() == financiering) {
                 return rr;
             }
         }
 
         return null;
     }
-    
+
     private JListLine getCheckRequestReply(CheckFinanciering financiering) {
 
         for (int i = 0; i < listModel.getSize(); i++) {
             JListLine rr = listModel.get(i);
-            if (rr.getCheckFinanciering()== financiering) {
+            if (rr.getCheckFinanciering() == financiering) {
                 return rr;
             }
         }
@@ -230,7 +238,7 @@ public class BrokerFrame extends JFrame{
     public void add(Financiering financiering) {
         listModel.addElement(new JListLine(financiering));
     }
-    
+
     public void add(CheckReply financiering) {
         listModel.addElement(new JListLine(financiering));
     }
@@ -242,7 +250,7 @@ public class BrokerFrame extends JFrame{
             list.repaint();
         }
     }
-    
+
     public void add(CheckFinanciering financiering, CheckReply checkReply) {
         JListLine rr = getCheckRequestReply(financiering);
         if (rr != null && checkReply != null) {
@@ -250,7 +258,7 @@ public class BrokerFrame extends JFrame{
             list.repaint();
         }
     }
-    
+
 //    private void aggregator(RequestReply rr) {
 //        double startval = -10;
 //        Validator val = new Validator();
@@ -303,8 +311,7 @@ public class BrokerFrame extends JFrame{
 //            validators.remove(val);
 //        }
 //    }
-    
-        private void aggregator(RequestReply rr) {
+    private void aggregator(RequestReply rr) {
         double startval = -10;
         Validator val = new Validator();
         CheckFinanciering cf = (CheckFinanciering) rr.getRequest();
@@ -313,35 +320,31 @@ public class BrokerFrame extends JFrame{
         JListLine jls = getCheckRequestReply(cf);
         //add(jls.getCheckFinanciering(), cr);
         CheckFinanciering fr = new CheckFinanciering();
-        
+
         CheckReply replys = (CheckReply) rr.getReply();
         List<CheckReply> checkReplys = new ArrayList<>();
         checkReplys.add(replys);
-        
 
 //        for (Validator v : validators) {
 //            if (v.getHash().equals(bire.getHash())) {
 //                val = v;
 //            }
 //        }
-        if (checkReplys.size() == 1) 
-        {
+        if (checkReplys.size() == 1) {
             String ssss = "Debug";
             RequestReply lowestInterest = new RequestReply();
             String sss = "Debug";
-            for (CheckReply reply: checkReplys) {
-                if(reply.getAnswer() == true)
-                {
+            for (CheckReply reply : checkReplys) {
+                if (reply.getAnswer() == true) {
                     //gatewaySecond.postMessage(checkedFinanciering);
                     String doTest = "Debug";
                     checkReplyers.add(reply.getSender());
                 }
             }
-//            for(String s: checkReplyers)
-//            {
-//                gateWayThird  = new Gateway(s + ".VerstrekkerReply", s + ".LastBroker");
-//                gateWayThird.postMessage(checkedFinanciering);
-//            }
+            for(String s: checkReplyers)
+            {
+                gateWayThird.postMessage(rr);
+            }
         }
     }
 }
