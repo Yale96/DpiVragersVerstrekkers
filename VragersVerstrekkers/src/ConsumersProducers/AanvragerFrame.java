@@ -8,6 +8,7 @@ package ConsumersProducers;
 import Models.Financiering;
 import Models.FinancieringsReply;
 import Models.RequestReply;
+import Models.Resultaat;
 import Models.TypeFinanciering;
 import Utils.Gateway;
 import Utils.HashGenerator;
@@ -67,10 +68,12 @@ public class AanvragerFrame extends JFrame {
         gateway = new Gateway("LoanReply.Broker", "LoanRequest.Client", "Test"){
             @Override
             public void messageReceived(RequestReply rr){
-                int index = getRequestReply((Financiering) rr.getRequest());
-                RequestReply rr2 = listModel.get(index);
-                rr2.setReply(rr.getReply());
-                requestReplyList.repaint();
+//                int index = getRequestReply((Financiering) rr.getRequest());
+//                RequestReply rr2 = listModel.get(index);
+//                rr2.setReply(rr.getReply());
+//                requestReplyList.repaint();
+                Resultaat s = (Resultaat) rr.getReply();
+                System.out.println(s);
             }
         };
 
@@ -171,7 +174,7 @@ public class AanvragerFrame extends JFrame {
 
                 Financiering financiering = new Financiering(bedrag, samenvatting, omschrijving, t);
                 financiering.setHash(HashGenerator.generate());
-                RequestReply rr = new RequestReply<Financiering, FinancieringsReply>(financiering, null);
+                RequestReply rr = new RequestReply<Financiering, Resultaat>(financiering, null);
                 listModel.addElement(rr);
                 gateway.postMessage(rr);
                 String s = "Debug";

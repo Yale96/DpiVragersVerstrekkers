@@ -50,6 +50,4 @@ public class FinancieringsReply implements Serializable {
     public void setHash(String hash) {
         this.hash = hash;
     }
-    
-    
 }

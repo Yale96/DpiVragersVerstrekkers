@@ -11,6 +11,7 @@ import Models.CheckedFinanciering;
 import Models.Financiering;
 import Models.FinancieringsReply;
 import Models.RequestReply;
+import Models.Resultaat;
 import Utils.Gateway;
 import Utils.GatewayTopic;
 import Utils.Validator;
@@ -48,6 +49,8 @@ public class BrokerFrame extends JFrame {
     private Gateway VerstrekkerEen;
     private Gateway VerstrekkerEenReply;
     private List<Gateway> queueNames;
+    private double totaalAangevraagd;
+    private Validator v;
 
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
@@ -73,6 +76,7 @@ public class BrokerFrame extends JFrame {
      */
     public BrokerFrame() {
         validators = new ArrayList<>();
+        totaalAangevraagd = 0.0;
         checkReplyers = new ArrayList<>();
         queueNames = new ArrayList<>();
 //        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked", "niks") {
@@ -89,6 +93,7 @@ public class BrokerFrame extends JFrame {
                 CheckReply cr = (CheckReply) rr.getReply();
                 CheckFinanciering cf = (CheckFinanciering) rr.getRequest();
                 add(cf, cr);
+                
                 list.repaint();
                 if (cr != null) {
                     aggregator(rr);
@@ -113,6 +118,10 @@ public class BrokerFrame extends JFrame {
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
                 System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
             }
         };
         queueNames.add(VerstrekkerEen);
@@ -136,6 +145,7 @@ public class BrokerFrame extends JFrame {
                 Financiering financiering = (Financiering) rr.getRequest();
                 add(financiering);
                 double i = financiering.getBedrag();
+                v = new Validator(financiering.getHash());
                 //HIER WORDEN CHECK EN EN CHECKEDFINANCIERINGEN GEMAAKT!!!
                 //BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime());
                 checkFinanciering = new CheckFinanciering(financiering.getBedrag(), financiering.getSamenvatting(), financiering.getTypeFinanciering());
@@ -306,6 +316,44 @@ public class BrokerFrame extends JFrame {
 //            validators.remove(val);
 //        }
 //    }
+    
+    private void aggregatorToClient(RequestReply rr) {
+        Validator val = new Validator();
+        FinancieringsReply bire = (FinancieringsReply) rr.getReply();
+
+        for (Validator v : validators) {
+            if (v.getHash().equals(bire.getHash())) {
+                val = v;
+            }
+        }
+        String s = "Debug";
+        double totalAmount = 0.0;
+        if (val.toVerstrekkers.size() == val.fromVerstrekkers.size()) {
+            for (RequestReply r : val.fromVerstrekkers) {
+                FinancieringsReply f = new FinancieringsReply();
+                totalAmount += f.getBedrag();
+            }
+            String ssss = "Debug";
+        }
+        if(totalAmount >= totaalAangevraagd)
+        {
+            //gatewayFirst.postMessage(lowestInterest);
+            Resultaat positief = new Resultaat("FINANCIERING GESLAAGD");
+            RequestReply r = new RequestReply<Financiering, Resultaat>(null, positief);
+            gatewayFirst.postMessage(r);
+            String ssts = "debug";
+        }
+        if(totalAmount < totaalAangevraagd)
+        {
+            Resultaat negatief = new Resultaat("FINANCIERING GEFAALD");
+            RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
+            gatewayFirst.postMessage(r);
+            String ssts = "debug";
+        }
+        totaalAangevraagd = 0.0;
+        validators.remove(val);
+    }
+    
     private void aggregator(RequestReply rr) {
         RequestReply rTwo = new RequestReply<CheckedFinanciering, FinancieringsReply>(checkedFinanciering, null);
         String st = "Debug";
@@ -324,9 +372,11 @@ public class BrokerFrame extends JFrame {
             }
             for(String s: checkReplyers)
             {
+                v.toVerstrekkers.add(s);
                 findGatewayByName(s).postMessage(rTwo);
             }
         }
+        validators.add(v);
     }
     
     private Gateway findGatewayByName(String name)
