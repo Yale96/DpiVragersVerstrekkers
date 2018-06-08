@@ -45,6 +45,6 @@ public class TypeFinanciering implements Serializable  {
     @Override
     public String toString()
     {
-        return "Nummer: " + nummer + ", Omschrijving: " + omschrijving;
+        return "Nummer: " + nummer + ", Type: " + omschrijving;
     }
 }

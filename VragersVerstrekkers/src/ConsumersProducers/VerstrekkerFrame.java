@@ -90,6 +90,9 @@ public class VerstrekkerFrame extends JFrame {
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
                 System.out.println("REICEIVED MESSAGE IN VERSTREKKER!!!!");
+                System.out.println("REICEIVED REQUEST::::::: " + rr.getRequest());
+                listModel.addElement(rr);
+                tfReply.setVisible(true);
             }
         };
         gatewayTopic = new GatewayTopic("first") {
@@ -188,7 +191,10 @@ public class VerstrekkerFrame extends JFrame {
                 if (rr != null && reply != null) {
                     rr.setReply(reply);
                     list.repaint();
-                    gatewayReply.postMessage(rr);
+                    if(rr.getReply().getClass() == CheckReply.class)
+                    {
+                        gateway.postMessage(rr);
+                    }
                 }
             }
         }

@@ -45,7 +45,7 @@ public class ConsumeMessage {
                             Object object = ((ObjectMessage) msg).getObject();
                             RequestReply rr = (RequestReply) object;
                             messageReceive(rr);
-                            Financiering f = (Financiering) rr.getRequest();
+                            //Financiering f = (Financiering) rr.getRequest();
                             String s = "Debug";
                         } catch (Exception e) {
                             System.out.println(e.toString());

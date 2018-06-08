@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class Validator {
     private String hash;
-    public List<String> toBanks;
-    public List<RequestReply> fromBanks;
+    public List<String> toVerstrekkers;
+    public List<RequestReply> fromVerstrekkers;
     
     public Validator(String id)
     {
         this.hash = id;
-        toBanks = new ArrayList<String>();
-        fromBanks = new ArrayList<RequestReply>();
+        toVerstrekkers = new ArrayList<String>();
+        fromVerstrekkers = new ArrayList<RequestReply>();
     }
 
     public Validator() {
@@ -38,18 +38,18 @@ public class Validator {
     }
 
     public List<String> getToBanks() {
-        return toBanks;
+        return toVerstrekkers;
     }
 
     public void setToBanks(List<String> toBanks) {
-        this.toBanks = toBanks;
+        this.toVerstrekkers = toBanks;
     }
 
     public List<RequestReply> getFromBanks() {
-        return fromBanks;
+        return fromVerstrekkers;
     }
 
-    public void setFromBanks(List<RequestReply> fromBanks) {
-        this.fromBanks = fromBanks;
+    public void setFromBanks(List<RequestReply> fromVerstrekkers) {
+        this.fromVerstrekkers = fromVerstrekkers;
     }
 }

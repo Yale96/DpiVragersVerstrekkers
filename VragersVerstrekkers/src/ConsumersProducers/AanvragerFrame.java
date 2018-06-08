@@ -161,7 +161,7 @@ public class AanvragerFrame extends JFrame {
         tfDropdownn.gridy = 3;
         contentPane.add(tfDropdown, tfDropdownn);
         
-        JButton btnQueue = new JButton("Vraag om financiering");
+        JButton btnQueue = new JButton("Vraag financiering aan");
         btnQueue.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 double bedrag = Double.parseDouble(tfSSN.getText());
