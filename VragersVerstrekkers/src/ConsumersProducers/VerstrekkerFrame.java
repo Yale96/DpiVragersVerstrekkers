@@ -8,6 +8,7 @@ package ConsumersProducers;
 import Models.CheckFinanciering;
 import Models.CheckReply;
 import Models.CheckedFinanciering;
+import Models.FinancieringsReply;
 import Models.RequestReply;
 import Models.TypeFinanciering;
 import Utils.ConsumeTopic;
@@ -35,6 +36,7 @@ import javax.swing.border.EmptyBorder;
  * @author Yannick van Leeuwen
  */
 public class VerstrekkerFrame extends JFrame {
+
     /**
      *
      */
@@ -45,10 +47,17 @@ public class VerstrekkerFrame extends JFrame {
     private JTextField tfReply;
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
+    private static DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>> listModelTwo = new DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>>();
     private Gateway VerstrekkerEen;
+    private Gateway VerstrekkerEenReply;
+    private JButton btnSendReplyTwo;
+    private JButton btnSendReply;
     private Gateway gateway;
     private GatewayTopic gatewayTopic;
     private Gateway gatewayReply;
+    private JScrollPane scrollPane;
+    private JList<RequestReply<CheckFinanciering, CheckReply>> list;
+    private JList<RequestReply<CheckedFinanciering, FinancieringsReply>> listTwo;
 
     /**
      * Launch the application.
@@ -72,17 +81,17 @@ public class VerstrekkerFrame extends JFrame {
      */
     public VerstrekkerFrame() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
-        String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2" , "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
+        String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2", "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
             @Override
             public void messageReceived(RequestReply rr) {
-                
+
             }
         };
         gatewayReply = new Gateway("second.Checked", "second.CheckFinanciering", "test") {
             @Override
             public void messageReceived(RequestReply rr) {
-                
+
             }
         };
         VerstrekkerEen = new Gateway("VerstrekkerEen.LastBroker", "VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen") {
@@ -91,8 +100,22 @@ public class VerstrekkerFrame extends JFrame {
                 //aggregator(rr);
                 System.out.println("REICEIVED MESSAGE IN VERSTREKKER!!!!");
                 System.out.println("REICEIVED REQUEST::::::: " + rr.getRequest());
-                listModel.addElement(rr);
+                //listModel.addElement(rr);
+                listModelTwo.addElement(rr);
+                listTwo = new JList<RequestReply<CheckedFinanciering, FinancieringsReply>>(listModelTwo);
+
+                scrollPane.setViewportView(listTwo);
                 tfReply.setVisible(true);
+                btnSendReply.setVisible(false);
+                btnSendReplyTwo.setVisible(true);
+                tfDropdown.setVisible(false);
+            }
+        };
+        VerstrekkerEenReply = new Gateway("VerstrekkerEenReply.LastBrokert", "VerstrekkerEenReply.VerstrekkerReplyt", "Niks") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+
             }
         };
         gatewayTopic = new GatewayTopic("first") {
@@ -101,7 +124,13 @@ public class VerstrekkerFrame extends JFrame {
                 CheckFinanciering checkFinanciering = (CheckFinanciering) rr.getRequest();
                 listModel.addElement(rr);
                 tfReply.setVisible(false);
-                }
+                btnSendReply.setVisible(true);
+                tfDropdown.setVisible(true);
+                btnSendReplyTwo.setVisible(false);
+                list = new JList<RequestReply<CheckFinanciering, CheckReply>>(listModel);
+
+                scrollPane.setViewportView(list);
+            }
         };
 
         setTitle("VerstrekkerEen");
@@ -121,7 +150,7 @@ public class VerstrekkerFrame extends JFrame {
 
         contentPane.setLayout(gbl_contentPane);
 
-        JScrollPane scrollPane = new JScrollPane();
+        scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.gridwidth = 5;
         gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
@@ -130,10 +159,6 @@ public class VerstrekkerFrame extends JFrame {
         gbc_scrollPane.gridy = 0;
 
         contentPane.add(scrollPane, gbc_scrollPane);
-
-        JList<RequestReply<CheckFinanciering, CheckReply>> list = new JList<RequestReply<CheckFinanciering, CheckReply>>(listModel);
-
-        scrollPane.setViewportView(list);
 
         JLabel lblNewLabel = new JLabel("type reply");
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
@@ -153,7 +178,7 @@ public class VerstrekkerFrame extends JFrame {
         gbc_tfReply.gridy = 2;
 
         contentPane.add(tfReply, gbc_tfReply);
-        
+
         JLabel lblDropdown = new JLabel("Antwoord");
         GridBagConstraints gbc_lblDropdown = new GridBagConstraints();
         gbc_lblDropdown.anchor = GridBagConstraints.EAST;
@@ -161,7 +186,7 @@ public class VerstrekkerFrame extends JFrame {
         gbc_lblDropdown.gridx = 3;
         gbc_lblDropdown.gridy = 2;
         contentPane.add(lblDropdown, gbc_lblDropdown);
-        
+
         tfDropdown = new JComboBox<String>(types);
         GridBagConstraints tfDropdownn = new GridBagConstraints();
         tfDropdownn.insets = new Insets(0, 0, 5, 5);
@@ -170,32 +195,51 @@ public class VerstrekkerFrame extends JFrame {
         tfDropdownn.gridy = 3;
         contentPane.add(tfDropdown, tfDropdownn);
         tfReply.setColumns(10);
-        
-        JButton btnSendReply = new JButton("send reply");
+
+        btnSendReply = new JButton("send reply");
 
         btnSendReply.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean b;
+
                 RequestReply<CheckFinanciering, CheckReply> rr = list.getSelectedValue();
+
                 //double interest = Double.parseDouble((tfReply.getText()));
-                if(tfDropdown.getSelectedItem().equals("Interessant"))
-                {
+                if (tfDropdown.getSelectedItem().equals("Interessant")) {
                     b = true;
-                }
-                else
+                } else {
                     b = false;
-                CheckReply reply = new CheckReply(b, getTitle());
-                reply.setHash(rr.getRequest().getHash());
-                if (rr != null && reply != null) {
-                    rr.setReply(reply);
-                    list.repaint();
-                    if(rr.getReply().getClass() == CheckReply.class)
-                    {
-                        gateway.postMessage(rr);
-                    }
                 }
+                CheckReply reply = new CheckReply(b, getTitle());
+
+                reply.setHash(rr.getRequest().getHash());
+
+                rr.setReply(reply);
+                list.repaint();
+                if (rr.getReply() != null) {
+                    gateway.postMessage(rr);
+
+                }
+            }
+        }
+        );
+
+        btnSendReplyTwo = new JButton("send reply");
+
+        btnSendReplyTwo.addActionListener(
+                new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e
+            ) {
+                RequestReply<CheckedFinanciering, FinancieringsReply> rrTwo = listTwo.getSelectedValue();
+                double bedrag = Double.parseDouble(tfReply.getText());
+                FinancieringsReply fReply = new FinancieringsReply(bedrag);
+                fReply.setHash(rrTwo.getRequest().getHash());
+                rrTwo.setReply(fReply);
+                VerstrekkerEen.postMessage(rrTwo);
             }
         }
         );
@@ -203,6 +247,14 @@ public class VerstrekkerFrame extends JFrame {
         gbc_btnSendReply.anchor = GridBagConstraints.NORTHWEST;
         gbc_btnSendReply.gridx = 4;
         gbc_btnSendReply.gridy = 1;
+
         contentPane.add(btnSendReply, gbc_btnSendReply);
+
+        GridBagConstraints gbc_btnSendReplyTwo = new GridBagConstraints();
+        gbc_btnSendReplyTwo.anchor = GridBagConstraints.NORTHWEST;
+        gbc_btnSendReplyTwo.gridx = 4;
+        gbc_btnSendReplyTwo.gridy = 1;
+
+        contentPane.add(btnSendReplyTwo, gbc_btnSendReplyTwo);
     }
 }

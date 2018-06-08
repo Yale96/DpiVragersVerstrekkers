@@ -14,13 +14,14 @@ import java.io.Serializable;
 public class FinancieringsReply implements Serializable {
     private long id;
     private double bedrag;
+    private String hash;
     
     public FinancieringsReply()
     {
         
     }
     
-    public FinancieringsReply(long id, double bedrag)
+    public FinancieringsReply(double bedrag)
     {
         this.id = id;
         this.bedrag = bedrag;
@@ -41,4 +42,14 @@ public class FinancieringsReply implements Serializable {
     public void setBedrag(double bedrag) {
         this.bedrag = bedrag;
     }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+    
+    
 }

@@ -46,6 +46,7 @@ public class BrokerFrame extends JFrame {
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
     private Gateway VerstrekkerEen;
+    private Gateway VerstrekkerEenReply;
     private List<Gateway> queueNames;
 
     private CheckFinanciering checkFinanciering;
@@ -94,6 +95,13 @@ public class BrokerFrame extends JFrame {
                 }
             }
         };
+        VerstrekkerEenReply = new Gateway("VerstrekkerEenReply.VerstrekkerReplyt", "VerstrekkerEenReply.LastBrokert", "Niks"){
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+            }
+        };
         gatewayTopic = new GatewayTopic("first") {
             @Override
             public void messageReceived(RequestReply rr) {
@@ -104,6 +112,7 @@ public class BrokerFrame extends JFrame {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
             }
         };
         queueNames.add(VerstrekkerEen);
