@@ -74,12 +74,12 @@ public class BrokerFrame extends JFrame {
         validators = new ArrayList<>();
         checkReplyers = new ArrayList<>();
         queueNames = new ArrayList<>();
-        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked", "niks") {
-            @Override
-            public void messageReceived(RequestReply rr) {
-                //aggregator(rr);
-            }
-        };
+//        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked", "niks") {
+//            @Override
+//            public void messageReceived(RequestReply rr) {
+//                //aggregator(rr);
+//            }
+//        };
         gatewaySecond = new Gateway("second.CheckFinanciering", "second.Checked", "niks") {
             @Override
             public void messageReceived(RequestReply rr) {
