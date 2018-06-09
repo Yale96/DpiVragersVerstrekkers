@@ -119,6 +119,7 @@ public class BrokerFrame extends JFrame {
                 //aggregator(rr);
                 System.out.println("WEER TERUG IN BROKER!!!!!");
                 FinancieringsReply f = (FinancieringsReply) rr.getReply();
+                totaalAangevraagd += f.getBedrag();
                 System.out.println("Ontvangen bedrag::: " + f.getBedrag());
                 v.fromVerstrekkers.add(rr);
                 aggregatorToClient(rr);

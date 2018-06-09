@@ -218,6 +218,7 @@ public class VerstrekkerFrame extends JFrame {
 
                 rr.setReply(reply);
                 list.repaint();
+                //listTwo.repaint();
                 if (rr.getReply() != null) {
                     gateway.postMessage(rr);
 
@@ -239,7 +240,8 @@ public class VerstrekkerFrame extends JFrame {
                 FinancieringsReply fReply = new FinancieringsReply(bedrag);
                 fReply.setHash(rrTwo.getRequest().getHash());
                 rrTwo.setReply(fReply);
-                list.repaint();
+                //list.repaint();
+                listTwo.repaint();
                 VerstrekkerEen.postMessage(rrTwo);
             }
         }
