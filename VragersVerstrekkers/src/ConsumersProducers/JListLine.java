@@ -19,6 +19,7 @@ class JListLine {
     private Financiering financiering;
     private FinancieringsReply financieringsReply;
     private TypeFinanciering typeFinanciering;
+    private Resultaat resultaat;
 
     public JListLine(Financiering financiering) {
         this.setFinanciering(financiering);
@@ -43,7 +44,7 @@ class JListLine {
     public void setCheckReply(CheckReply checkReply) {
         this.checkReply = checkReply;
     }
-
+    
     public CheckedFinanciering getCheckedFinanciering() {
         return checkedFinanciering;
     }
@@ -76,8 +77,16 @@ class JListLine {
         this.typeFinanciering = typeFinanciering;
     }
 
+    public Resultaat getResultaat() {
+        return resultaat;
+    }
+
+    public void setResultaat(Resultaat resultaat) {
+        this.resultaat = resultaat;
+    }
+    
     @Override
     public String toString() {
-        return financiering.toString() + " || " + ((financieringsReply != null) ? financieringsReply.toString() : "waiting for reply...");
+        return financiering.toString() + " || " + ((resultaat != null) ? resultaat.toString() : "waiting for reply...");
     }
 }

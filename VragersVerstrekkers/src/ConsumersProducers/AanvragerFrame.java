@@ -40,8 +40,8 @@ public class AanvragerFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField tfSSN;
-    private DefaultListModel<RequestReply<Financiering, FinancieringsReply>> listModel = new DefaultListModel<RequestReply<Financiering, FinancieringsReply>>();
-    private JList<RequestReply<Financiering, FinancieringsReply>> requestReplyList;
+    private DefaultListModel<RequestReply<Financiering, Resultaat>> listModel = new DefaultListModel<RequestReply<Financiering, Resultaat>>();
+    private JList<RequestReply<Financiering, Resultaat>> requestReplyList;
 
     private JTextField tfAmount;
     private JLabel lblNewLabel;
@@ -73,6 +73,7 @@ public class AanvragerFrame extends JFrame {
 //                rr2.setReply(rr.getReply());
 //                requestReplyList.repaint();
                 Resultaat s = (Resultaat) rr.getReply();
+                getRequestReply(s);
                 System.out.println(s);
             }
         };
@@ -198,15 +199,17 @@ public class AanvragerFrame extends JFrame {
         gbc_scrollPane.gridy = 4;
         contentPane.add(scrollPane, gbc_scrollPane);
 
-        requestReplyList = new JList<RequestReply<Financiering, FinancieringsReply>>(listModel);
+        requestReplyList = new JList<RequestReply<Financiering, Resultaat>>(listModel);
         scrollPane.setViewportView(requestReplyList);
     }
 
-    private int getRequestReply(Financiering financiering) {
+    private int getRequestReply(Resultaat financiering) {
 
         for (int i = 0; i < listModel.getSize(); i++) {
-            RequestReply<Financiering, FinancieringsReply> rr = listModel.get(i);
+            RequestReply<Financiering, Resultaat> rr = listModel.get(i);
             if (rr.getRequest().getHash().equals(financiering.getHash())) {
+                listModel.clear();
+                listModel.addElement(rr);
                 return i;
             }
         }

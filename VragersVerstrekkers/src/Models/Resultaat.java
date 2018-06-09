@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class Resultaat implements Serializable{
     private String resultaat;
+    private String hash;
     
     public Resultaat(String resultaat)
     {
@@ -26,6 +27,16 @@ public class Resultaat implements Serializable{
     public void setResultaat(String resultaat) {
         this.resultaat = resultaat;
     }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+    
+    
     
     @Override
     public String toString()

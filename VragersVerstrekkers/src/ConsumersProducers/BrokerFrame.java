@@ -339,6 +339,7 @@ public class BrokerFrame extends JFrame {
         {
             //gatewayFirst.postMessage(lowestInterest);
             Resultaat positief = new Resultaat("FINANCIERING GESLAAGD");
+            positief.setHash(val.getHash());
             RequestReply r = new RequestReply<Financiering, Resultaat>(null, positief);
             gatewayFirst.postMessage(r);
             String ssts = "debug";
@@ -346,6 +347,7 @@ public class BrokerFrame extends JFrame {
         if(totalAmount < totaalAangevraagd)
         {
             Resultaat negatief = new Resultaat("FINANCIERING GEFAALD");
+            negatief.setHash(val.getHash());
             RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
             gatewayFirst.postMessage(r);
             String ssts = "debug";
@@ -374,8 +376,10 @@ public class BrokerFrame extends JFrame {
             {
                 v.toVerstrekkers.add(s);
                 findGatewayByName(s).postMessage(rTwo);
+                
             }
         }
+        checkReplyers.clear();
         validators.add(v);
     }
     

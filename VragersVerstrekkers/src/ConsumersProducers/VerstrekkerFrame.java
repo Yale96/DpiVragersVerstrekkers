@@ -196,7 +196,7 @@ public class VerstrekkerFrame extends JFrame {
         contentPane.add(tfDropdown, tfDropdownn);
         tfReply.setColumns(10);
 
-        btnSendReply = new JButton("send reply");
+        btnSendReply = new JButton("send checkreply");
 
         btnSendReply.addActionListener(new ActionListener() {
 
@@ -226,7 +226,7 @@ public class VerstrekkerFrame extends JFrame {
         }
         );
 
-        btnSendReplyTwo = new JButton("send reply");
+        btnSendReplyTwo = new JButton("send finanreply");
 
         btnSendReplyTwo.addActionListener(
                 new ActionListener() {
@@ -239,6 +239,7 @@ public class VerstrekkerFrame extends JFrame {
                 FinancieringsReply fReply = new FinancieringsReply(bedrag);
                 fReply.setHash(rrTwo.getRequest().getHash());
                 rrTwo.setReply(fReply);
+                list.repaint();
                 VerstrekkerEen.postMessage(rrTwo);
             }
         }
