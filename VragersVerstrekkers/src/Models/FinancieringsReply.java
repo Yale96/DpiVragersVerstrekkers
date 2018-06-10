@@ -50,4 +50,10 @@ public class FinancieringsReply implements Serializable {
     public void setHash(String hash) {
         this.hash = hash;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Gefinancierde bedrag: " + bedrag;
+    }
 }

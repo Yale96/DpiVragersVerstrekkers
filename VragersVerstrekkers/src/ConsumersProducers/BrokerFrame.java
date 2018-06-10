@@ -47,10 +47,12 @@ public class BrokerFrame extends JFrame {
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
     private Gateway VerstrekkerEen;
-    private Gateway VerstrekkerEenReply;
+    private Gateway VerstrekkerTwee;
+    ;    private Gateway VerstrekkerEenReply;
     private List<Gateway> queueNames;
     private double totaalAangevraagd;
     private Validator v;
+    List<CheckReply> checkReplys;
 
     private CheckFinanciering checkFinanciering;
     private CheckedFinanciering checkedFinanciering;
@@ -77,6 +79,7 @@ public class BrokerFrame extends JFrame {
     public BrokerFrame() {
         validators = new ArrayList<>();
         totaalAangevraagd = 0.0;
+        checkReplys = new ArrayList<>();
         checkReplyers = new ArrayList<>();
         queueNames = new ArrayList<>();
 //        gatewayFirst = new Gateway("first.CheckFinanciering", "first.Checked", "niks") {
@@ -93,14 +96,14 @@ public class BrokerFrame extends JFrame {
                 CheckReply cr = (CheckReply) rr.getReply();
                 CheckFinanciering cf = (CheckFinanciering) rr.getRequest();
                 add(cf, cr);
-                
+
                 list.repaint();
                 if (cr != null) {
                     aggregator(rr);
                 }
             }
         };
-        VerstrekkerEenReply = new Gateway("VerstrekkerEenReply.VerstrekkerReplyt", "VerstrekkerEenReply.LastBrokert", "Niks"){
+        VerstrekkerEenReply = new Gateway("VerstrekkerEenReply.VerstrekkerReplyt", "VerstrekkerEenReply.LastBrokert", "Niks") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -119,13 +122,28 @@ public class BrokerFrame extends JFrame {
                 //aggregator(rr);
                 System.out.println("WEER TERUG IN BROKER!!!!!");
                 FinancieringsReply f = (FinancieringsReply) rr.getReply();
-                totaalAangevraagd += f.getBedrag();
+
                 System.out.println("Ontvangen bedrag::: " + f.getBedrag());
                 v.fromVerstrekkers.add(rr);
                 aggregatorToClient(rr);
             }
         };
         queueNames.add(VerstrekkerEen);
+
+        //
+        VerstrekkerTwee = new Gateway("VerstrekkerTwee.VerstrekkerReply", "VerstrekkerTwee.LastBroker", "VerstrekkerTwee") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
+            }
+        };
+        queueNames.add(VerstrekkerTwee);
 //        
 //        rabo = new Gateway("RaboBank.BankInterestRequest", "RaboBank.BankInterestReply") {
 //            @Override
@@ -144,6 +162,7 @@ public class BrokerFrame extends JFrame {
             @Override
             public void messageReceived(RequestReply rr) {
                 Financiering financiering = (Financiering) rr.getRequest();
+                totaalAangevraagd += financiering.getBedrag();
                 add(financiering);
                 double i = financiering.getBedrag();
                 v = new Validator(financiering.getHash());
@@ -222,7 +241,7 @@ public class BrokerFrame extends JFrame {
 
         for (int i = 0; i < listModel.getSize(); i++) {
             JListLine rr = listModel.get(i);
-            if (rr.getCheckReply()== financiering) {
+            if (rr.getCheckReply() == financiering) {
                 return rr;
             }
         }
@@ -317,7 +336,6 @@ public class BrokerFrame extends JFrame {
 //            validators.remove(val);
 //        }
 //    }
-    
     private void aggregatorToClient(RequestReply rr) {
         Validator val = new Validator();
         FinancieringsReply bire = (FinancieringsReply) rr.getReply();
@@ -331,41 +349,42 @@ public class BrokerFrame extends JFrame {
         double totalAmount = 0.0;
         if (val.toVerstrekkers.size() == val.fromVerstrekkers.size()) {
             for (RequestReply r : val.fromVerstrekkers) {
-                FinancieringsReply f = new FinancieringsReply();
+                String scda = "Debug";
+                FinancieringsReply f = (FinancieringsReply) r.getReply();
                 totalAmount += f.getBedrag();
             }
             String ssss = "Debug";
-        }
-        if(totalAmount >= totaalAangevraagd)
-        {
-            //gatewayFirst.postMessage(lowestInterest);
-            Resultaat positief = new Resultaat("FINANCIERING GESLAAGD");
-            positief.setHash(val.getHash());
-            RequestReply r = new RequestReply<Financiering, Resultaat>(null, positief);
-            gatewayFirst.postMessage(r);
-            String ssts = "debug";
-        }
-        if(totalAmount < totaalAangevraagd)
-        {
-            Resultaat negatief = new Resultaat("FINANCIERING GEFAALD");
-            negatief.setHash(val.getHash());
-            RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
-            gatewayFirst.postMessage(r);
-            String ssts = "debug";
+            if (totalAmount >= totaalAangevraagd) {
+                //gatewayFirst.postMessage(lowestInterest);
+                Resultaat positief = new Resultaat("FINANCIERING GESLAAGD");
+                positief.setHash(val.getHash());
+                RequestReply r = new RequestReply<Financiering, Resultaat>(null, positief);
+                gatewayFirst.postMessage(r);
+                String ssts = "debug";
+                validators.remove(val);
+            }
+            if (totalAmount < totaalAangevraagd) {
+                Resultaat negatief = new Resultaat("FINANCIERING GEFAALD");
+                negatief.setHash(val.getHash());
+                RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
+                gatewayFirst.postMessage(r);
+                String ssts = "debug";
+                validators.remove(val);
+            }
         }
         totaalAangevraagd = 0.0;
-        validators.remove(val);
+
     }
-    
+
     private void aggregator(RequestReply rr) {
         RequestReply rTwo = new RequestReply<CheckedFinanciering, FinancieringsReply>(checkedFinanciering, null);
         String st = "Debug";
-        
+
         CheckReply replys = (CheckReply) rr.getReply();
-        List<CheckReply> checkReplys = new ArrayList<>();
+
         checkReplys.add(replys);
 
-        if (checkReplys.size() == 1) {
+        if (checkReplys.size() == 2) {
             String ssss = "Debug";
             String sss = "Debug";
             for (CheckReply reply : checkReplys) {
@@ -373,23 +392,19 @@ public class BrokerFrame extends JFrame {
                     checkReplyers.add(reply.getSender());
                 }
             }
-            for(String s: checkReplyers)
-            {
+            for (String s : checkReplyers) {
                 v.toVerstrekkers.add(s);
                 findGatewayByName(s).postMessage(rTwo);
-                
+                checkReplys.clear();
             }
         }
         checkReplyers.clear();
         validators.add(v);
     }
-    
-    private Gateway findGatewayByName(String name)
-    {
-        for(Gateway g: queueNames)
-        {
-            if(g.getName().equals(name))
-            {
+
+    private Gateway findGatewayByName(String name) {
+        for (Gateway g : queueNames) {
+            if (g.getName().equals(name)) {
                 System.out.println("GATEWAY NAME::: " + g.getName());
                 return g;
             }
