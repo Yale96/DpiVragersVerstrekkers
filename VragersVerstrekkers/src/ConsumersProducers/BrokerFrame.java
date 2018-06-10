@@ -362,6 +362,7 @@ public class BrokerFrame extends JFrame {
                 gatewayFirst.postMessage(r);
                 String ssts = "debug";
                 validators.remove(val);
+                totaalAangevraagd = 0.0;
             }
             if (totalAmount < totaalAangevraagd) {
                 Resultaat negatief = new Resultaat("FINANCIERING GEFAALD");
@@ -370,10 +371,9 @@ public class BrokerFrame extends JFrame {
                 gatewayFirst.postMessage(r);
                 String ssts = "debug";
                 validators.remove(val);
+                totaalAangevraagd = 0.0;
             }
         }
-        totaalAangevraagd = 0.0;
-
     }
 
     private void aggregator(RequestReply rr) {
@@ -392,10 +392,19 @@ public class BrokerFrame extends JFrame {
                     checkReplyers.add(reply.getSender());
                 }
             }
-            for (String s : checkReplyers) {
-                v.toVerstrekkers.add(s);
-                findGatewayByName(s).postMessage(rTwo);
-                checkReplys.clear();
+            if (checkReplyers.size() != 0) {
+                for (String s : checkReplyers) {
+                    v.toVerstrekkers.add(s);
+                    findGatewayByName(s).postMessage(rTwo);
+                    checkReplys.clear();
+                }
+            }
+            else
+            {
+                Resultaat negatief = new Resultaat("FINANCIERING GEFAALD WEGENS GEEN INTERESSE");
+                negatief.setHash(v.getHash());
+                RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
+                gatewayFirst.postMessage(r);
             }
         }
         checkReplyers.clear();
