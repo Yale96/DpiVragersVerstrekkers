@@ -405,6 +405,10 @@ public class BrokerFrame extends JFrame {
                 negatief.setHash(v.getHash());
                 RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
                 gatewayFirst.postMessage(r);
+                validators.remove(v);
+                checkReplys.clear();
+                checkReplyers.clear();
+                totaalAangevraagd = 0.0;
             }
         }
         checkReplyers.clear();
