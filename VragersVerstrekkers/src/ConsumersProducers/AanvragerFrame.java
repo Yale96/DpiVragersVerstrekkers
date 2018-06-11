@@ -80,9 +80,10 @@ public class AanvragerFrame extends JFrame {
 
         setTitle("Aanvrager");
         TypeFinanciering defaultt = new TypeFinanciering(0, "Selecteer Type");
-        TypeFinanciering typeOne = new TypeFinanciering(1, "Type een");
-        TypeFinanciering typeTwo = new TypeFinanciering(2, "Type two");
-        TypeFinanciering typeThree = new TypeFinanciering(3, "Type three");
+        TypeFinanciering typeOne = new TypeFinanciering(1, "Kan rekeningen niet betalen");
+        TypeFinanciering typeTwo = new TypeFinanciering(2, "Wil investeren, maar heb het geld niet");
+        TypeFinanciering typeThree = new TypeFinanciering(3, "Wil groeien, maar heb het kapitaal niet");
+        TypeFinanciering typeFour = new TypeFinanciering(4, "Comm. vastgoed");
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 684, 619);
@@ -103,7 +104,7 @@ public class AanvragerFrame extends JFrame {
         gbc_lblBody.gridy = 0;
         contentPane.add(lblBody, gbc_lblBody);
         
-        TypeFinanciering[] types = {defaultt, typeOne, typeTwo, typeThree};
+        TypeFinanciering[] types = {defaultt, typeOne, typeTwo, typeThree, typeFour};
         
         tfSSN = new JTextField();
         GridBagConstraints gbc_tfSSN = new GridBagConstraints();
