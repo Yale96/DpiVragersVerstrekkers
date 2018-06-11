@@ -48,7 +48,11 @@ public class BrokerFrame extends JFrame {
     private GatewayTopic gatewayTopicTwo;
     private Gateway VerstrekkerEen;
     private Gateway VerstrekkerTwee;
-    ;    private Gateway VerstrekkerEenReply;
+    private Gateway VerstrekkerEenReply;
+    private Gateway VerstrekkerDrie;
+    private Gateway VerstrekkerVier;
+    private Gateway VerstrekkerVijf;
+    private Gateway VerstrekkerZes;
     private List<Gateway> queueNames;
     private double totaalAangevraagd;
     private Validator v;
@@ -144,7 +148,63 @@ public class BrokerFrame extends JFrame {
             }
         };
         queueNames.add(VerstrekkerTwee);
-//        
+        
+        VerstrekkerDrie = new Gateway("VerstrekkerDrie.VerstrekkerReply", "VerstrekkerDrie.LastBroker", "VerstrekkerDrie") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
+            }
+        };
+        queueNames.add(VerstrekkerDrie);
+        
+        VerstrekkerVier = new Gateway("VerstrekkerVier.VerstrekkerReply", "VerstrekkerVier.LastBroker", "VerstrekkerVier") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
+            }
+        };
+        queueNames.add(VerstrekkerVier);
+        
+        VerstrekkerVijf = new Gateway("VerstrekkerVijf.VerstrekkerReply", "VerstrekkerVijf.LastBroker", "VerstrekkerVijf") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
+            }
+        };
+        queueNames.add(VerstrekkerVijf);
+        
+        VerstrekkerZes = new Gateway("VerstrekkerZes.VerstrekkerReply", "VerstrekkerZes.LastBroker", "VerstrekkerZes") {
+            @Override
+            public void messageReceived(RequestReply rr) {
+                //aggregator(rr);
+                System.out.println("WEER TERUG IN BROKER!!!!!");
+                FinancieringsReply f = (FinancieringsReply) rr.getReply();
+
+                System.out.println("Ontvangen bedrag::: " + f.getBedrag());
+                v.fromVerstrekkers.add(rr);
+                aggregatorToClient(rr);
+            }
+        };
+        queueNames.add(VerstrekkerZes);
+
 //        rabo = new Gateway("RaboBank.BankInterestRequest", "RaboBank.BankInterestReply") {
 //            @Override
 //            public void messageReceived(RequestReply rr) {
@@ -372,6 +432,7 @@ public class BrokerFrame extends JFrame {
                 String ssts = "debug";
                 validators.remove(val);
                 totaalAangevraagd = 0.0;
+                queueNames.clear();
             }
         }
     }
@@ -384,7 +445,7 @@ public class BrokerFrame extends JFrame {
 
         checkReplys.add(replys);
 
-        if (checkReplys.size() == 2) {
+        if (checkReplys.size() == queueNames.size()) {
             String ssss = "Debug";
             String sss = "Debug";
             for (CheckReply reply : checkReplys) {

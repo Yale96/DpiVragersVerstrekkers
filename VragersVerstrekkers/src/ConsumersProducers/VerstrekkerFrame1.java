@@ -136,11 +136,11 @@ public class VerstrekkerFrame1 extends JFrame {
         setTitle("VerstrekkerTwee");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setBounds(100, 100, 684, 619);
+        setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
 
         contentPane.setBorder(
-                new EmptyBorder(50, 5, 200, 5));
+                new EmptyBorder(20, 5, 50, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
         gbl_contentPane.columnWidths = new int[]{46, 31, 86, 30, 89, 0};
