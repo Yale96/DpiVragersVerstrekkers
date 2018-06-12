@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Yannick van Leeuwen
  */
-public class VerstrekkerFrame extends JFrame {
+public class Bank extends JFrame {
 
     /**
      *
@@ -48,7 +48,7 @@ public class VerstrekkerFrame extends JFrame {
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
     private static DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>> listModelTwo = new DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>>();
-    private Gateway VerstrekkerEen;
+    private Gateway bank;
     private Gateway VerstrekkerEenReply;
     private JButton btnSendReplyTwo;
     private JButton btnSendReply;
@@ -67,7 +67,7 @@ public class VerstrekkerFrame extends JFrame {
             @Override
             public void run() {
                 try {
-                    VerstrekkerFrame frame = new VerstrekkerFrame();
+                    Bank frame = new Bank();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,7 +79,7 @@ public class VerstrekkerFrame extends JFrame {
     /**
      * Create the frame.
      */
-    public VerstrekkerFrame() {
+    public Bank() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2", "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
@@ -94,7 +94,7 @@ public class VerstrekkerFrame extends JFrame {
 
             }
         };
-        VerstrekkerEen = new Gateway("VerstrekkerEen.LastBroker", "VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen") {
+        bank = new Gateway("bank.LastBroker", "bank.VerstrekkerReply", "bank") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -133,7 +133,7 @@ public class VerstrekkerFrame extends JFrame {
             }
         };
 
-        setTitle("VerstrekkerEen");
+        setTitle("bank");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(100, 100, 450, 300);
@@ -242,7 +242,7 @@ public class VerstrekkerFrame extends JFrame {
                 rrTwo.setReply(fReply);
                 //list.repaint();
                 listTwo.repaint();
-                VerstrekkerEen.postMessage(rrTwo);
+                bank.postMessage(rrTwo);
             }
         }
         );
