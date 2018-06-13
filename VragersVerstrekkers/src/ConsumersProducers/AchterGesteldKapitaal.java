@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Yannick van Leeuwen
  */
-public class VerstrekkerFrame4 extends JFrame {
+public class AchterGesteldKapitaal extends JFrame {
 
     /**
      *
@@ -48,7 +48,7 @@ public class VerstrekkerFrame4 extends JFrame {
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
     private static DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>> listModelTwo = new DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>>();
-    private Gateway VerstrekkerVijf;
+    private Gateway AchtergesteldKapitaal;
     private Gateway VerstrekkerEenReply;
     private JButton btnSendReplyTwo;
     private JButton btnSendReply;
@@ -67,7 +67,7 @@ public class VerstrekkerFrame4 extends JFrame {
             @Override
             public void run() {
                 try {
-                    VerstrekkerFrame4 frame = new VerstrekkerFrame4();
+                    AchterGesteldKapitaal frame = new AchterGesteldKapitaal();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,7 +79,7 @@ public class VerstrekkerFrame4 extends JFrame {
     /**
      * Create the frame.
      */
-    public VerstrekkerFrame4() {
+    public AchterGesteldKapitaal() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2", "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
@@ -94,7 +94,7 @@ public class VerstrekkerFrame4 extends JFrame {
 
             }
         };
-        VerstrekkerVijf = new Gateway("VerstrekkerVijf.LastBroker", "VerstrekkerVijf.VerstrekkerReply", "VerstrekkerVijf") {
+        AchtergesteldKapitaal = new Gateway("AchtergesteldKapitaal.LastBroker", "AchtergesteldKapitaal.VerstrekkerReply", "AchtergesteldKapitaal") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -133,7 +133,7 @@ public class VerstrekkerFrame4 extends JFrame {
             }
         };
 
-        setTitle("VerstrekkerVijf");
+        setTitle("AchtergesteldKapitaal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(100, 100, 450, 300);
@@ -242,7 +242,7 @@ public class VerstrekkerFrame4 extends JFrame {
                 rrTwo.setReply(fReply);
                 //list.repaint();
                 listTwo.repaint();
-                VerstrekkerVijf.postMessage(rrTwo);
+                AchtergesteldKapitaal.postMessage(rrTwo);
             }
         }
         );

@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Yannick van Leeuwen
  */
-public class VerstrekkerFrame5 extends JFrame {
+public class CrowdFunding extends JFrame {
 
     /**
      *
@@ -48,7 +48,7 @@ public class VerstrekkerFrame5 extends JFrame {
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
     private static DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>> listModelTwo = new DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>>();
-    private Gateway VerstrekkerZes;
+    private Gateway CrowdFunding;
     private Gateway VerstrekkerEenReply;
     private JButton btnSendReplyTwo;
     private JButton btnSendReply;
@@ -67,7 +67,7 @@ public class VerstrekkerFrame5 extends JFrame {
             @Override
             public void run() {
                 try {
-                    VerstrekkerFrame5 frame = new VerstrekkerFrame5();
+                    CrowdFunding frame = new CrowdFunding();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,7 +79,7 @@ public class VerstrekkerFrame5 extends JFrame {
     /**
      * Create the frame.
      */
-    public VerstrekkerFrame5() {
+    public CrowdFunding() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2", "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
@@ -94,7 +94,7 @@ public class VerstrekkerFrame5 extends JFrame {
 
             }
         };
-        VerstrekkerZes = new Gateway("VerstrekkerZes.LastBroker", "VerstrekkerZes.VerstrekkerReply", "VerstrekkerZes") {
+        CrowdFunding = new Gateway("CrowdFunding.LastBroker", "CrowdFunding.VerstrekkerReply", "CrowdFunding") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -133,7 +133,7 @@ public class VerstrekkerFrame5 extends JFrame {
             }
         };
 
-        setTitle("VerstrekkerZes");
+        setTitle("CrowdFunding");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(100, 100, 450, 300);
@@ -242,7 +242,7 @@ public class VerstrekkerFrame5 extends JFrame {
                 rrTwo.setReply(fReply);
                 //list.repaint();
                 listTwo.repaint();
-                VerstrekkerZes.postMessage(rrTwo);
+                CrowdFunding.postMessage(rrTwo);
             }
         }
         );

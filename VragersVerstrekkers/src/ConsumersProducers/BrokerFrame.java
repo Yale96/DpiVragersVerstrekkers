@@ -46,13 +46,13 @@ public class BrokerFrame extends JFrame {
     private Gateway gateWayThird;
     private GatewayTopic gatewayTopic;
     private GatewayTopic gatewayTopicTwo;
-    private Gateway VerstrekkerEen;
-    private Gateway VerstrekkerTwee;
+    private Gateway Factoring;
+    private Gateway AchtergesteldKapitaal;
     private Gateway VerstrekkerEenReply;
-    private Gateway VerstrekkerDrie;
-    private Gateway VerstrekkerVier;
-    private Gateway VerstrekkerVijf;
-    private Gateway VerstrekkerZes;
+    private Gateway bank;
+    private Gateway UitFondsen;
+    private Gateway CrowdFunding;
+    private Gateway Leasing;
     private List<Gateway> queueNames;
     private double totaalAangevraagd;
     private Validator v;
@@ -120,7 +120,7 @@ public class BrokerFrame extends JFrame {
                 //aggregator(rr);
             }
         };
-        VerstrekkerEen = new Gateway("VerstrekkerEen.VerstrekkerReply", "VerstrekkerEen.LastBroker", "VerstrekkerEen") {
+        Factoring = new Gateway("Factoring.VerstrekkerReply", "Factoring.LastBroker", "Factoring") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -132,10 +132,10 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerEen);
+        queueNames.add(Factoring);
 
         //
-        VerstrekkerTwee = new Gateway("VerstrekkerTwee.VerstrekkerReply", "VerstrekkerTwee.LastBroker", "VerstrekkerTwee") {
+        AchtergesteldKapitaal = new Gateway("AchtergesteldKapitaal.VerstrekkerReply", "AchtergesteldKapitaal.LastBroker", "AchtergesteldKapitaal") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -147,9 +147,9 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerTwee);
+        queueNames.add(AchtergesteldKapitaal);
         
-        VerstrekkerDrie = new Gateway("VerstrekkerDrie.VerstrekkerReply", "VerstrekkerDrie.LastBroker", "VerstrekkerDrie") {
+        bank = new Gateway("bank.VerstrekkerReply", "bank.LastBroker", "bank") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -161,9 +161,9 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerDrie);
+        queueNames.add(bank);
         
-        VerstrekkerVier = new Gateway("VerstrekkerVier.VerstrekkerReply", "VerstrekkerVier.LastBroker", "VerstrekkerVier") {
+        UitFondsen = new Gateway("UitFondsen.VerstrekkerReply", "UitFondsen.LastBroker", "UitFondsen") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -175,9 +175,9 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerVier);
+        queueNames.add(UitFondsen);
         
-        VerstrekkerVijf = new Gateway("VerstrekkerVijf.VerstrekkerReply", "VerstrekkerVijf.LastBroker", "VerstrekkerVijf") {
+        CrowdFunding = new Gateway("CrowdFunding.VerstrekkerReply", "CrowdFunding.LastBroker", "CrowdFunding") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -189,9 +189,9 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerVijf);
+        queueNames.add(CrowdFunding);
         
-        VerstrekkerZes = new Gateway("VerstrekkerZes.VerstrekkerReply", "VerstrekkerZes.LastBroker", "VerstrekkerZes") {
+        Leasing = new Gateway("Leasing.VerstrekkerReply", "Leasing.LastBroker", "Leasing") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -203,7 +203,7 @@ public class BrokerFrame extends JFrame {
                 aggregatorToClient(rr);
             }
         };
-        queueNames.add(VerstrekkerZes);
+        queueNames.add(Leasing);
 
 //        rabo = new Gateway("RaboBank.BankInterestRequest", "RaboBank.BankInterestReply") {
 //            @Override
@@ -421,7 +421,7 @@ public class BrokerFrame extends JFrame {
                 RequestReply r = new RequestReply<Financiering, Resultaat>(null, positief);
                 gatewayFirst.postMessage(r);
                 String ssts = "debug";
-                validators.remove(val);
+                validators.clear();
                 totaalAangevraagd = 0.0;
             }
             if (totalAmount < totaalAangevraagd) {
@@ -430,7 +430,7 @@ public class BrokerFrame extends JFrame {
                 RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
                 gatewayFirst.postMessage(r);
                 String ssts = "debug";
-                validators.remove(val);
+                validators.clear();
                 totaalAangevraagd = 0.0;
                 queueNames.clear();
             }
@@ -466,7 +466,7 @@ public class BrokerFrame extends JFrame {
                 negatief.setHash(v.getHash());
                 RequestReply r = new RequestReply<Financiering, Resultaat>(null, negatief);
                 gatewayFirst.postMessage(r);
-                validators.remove(v);
+                validators.clear();
                 checkReplys.clear();
                 checkReplyers.clear();
                 totaalAangevraagd = 0.0;

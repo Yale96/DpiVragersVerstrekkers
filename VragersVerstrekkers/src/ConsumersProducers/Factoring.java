@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Yannick van Leeuwen
  */
-public class VerstrekkerFrame3 extends JFrame {
+public class Factoring extends JFrame {
 
     /**
      *
@@ -48,7 +48,7 @@ public class VerstrekkerFrame3 extends JFrame {
     private JTextField tfSender;
     private static DefaultListModel<RequestReply<CheckFinanciering, CheckReply>> listModel = new DefaultListModel<RequestReply<CheckFinanciering, CheckReply>>();
     private static DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>> listModelTwo = new DefaultListModel<RequestReply<CheckedFinanciering, FinancieringsReply>>();
-    private Gateway VerstrekkerVier;
+    private Gateway Factoring;
     private Gateway VerstrekkerEenReply;
     private JButton btnSendReplyTwo;
     private JButton btnSendReply;
@@ -67,7 +67,7 @@ public class VerstrekkerFrame3 extends JFrame {
             @Override
             public void run() {
                 try {
-                    VerstrekkerFrame3 frame = new VerstrekkerFrame3();
+                    Factoring frame = new Factoring();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,7 +79,7 @@ public class VerstrekkerFrame3 extends JFrame {
     /**
      * Create the frame.
      */
-    public VerstrekkerFrame3() {
+    public Factoring() {
         String[] types = {"Selecteer uw antwoord", "Interessant", "Niet Interessant"};
         String[] responders = {"Selecteer wie u bent", "Reponder 1", "Responder 2", "Responder 3", "Responder 4", "Responder 5", "Responder 6"};
         gateway = new Gateway("first.Checked", "first.CheckFinanciering", "test") {
@@ -94,7 +94,7 @@ public class VerstrekkerFrame3 extends JFrame {
 
             }
         };
-        VerstrekkerVier = new Gateway("VerstrekkerVier.LastBroker", "VerstrekkerVier.VerstrekkerReply", "VerstrekkerVier") {
+        Factoring = new Gateway("Factoring.LastBroker", "Factoring.VerstrekkerReply", "Factoring") {
             @Override
             public void messageReceived(RequestReply rr) {
                 //aggregator(rr);
@@ -133,7 +133,7 @@ public class VerstrekkerFrame3 extends JFrame {
             }
         };
 
-        setTitle("VerstrekkerVier");
+        setTitle("Factoring");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(100, 100, 450, 300);
@@ -242,7 +242,7 @@ public class VerstrekkerFrame3 extends JFrame {
                 rrTwo.setReply(fReply);
                 //list.repaint();
                 listTwo.repaint();
-                VerstrekkerVier.postMessage(rrTwo);
+                Factoring.postMessage(rrTwo);
             }
         }
         );
