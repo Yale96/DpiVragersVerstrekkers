@@ -432,7 +432,7 @@ public class BrokerFrame extends JFrame {
                 String ssts = "debug";
                 validators.clear();
                 totaalAangevraagd = 0.0;
-                queueNames.clear();
+                //queueNames.clear();
             }
         }
     }
