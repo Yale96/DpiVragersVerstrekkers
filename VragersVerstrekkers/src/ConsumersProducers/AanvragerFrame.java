@@ -68,13 +68,14 @@ public class AanvragerFrame extends JFrame {
         gateway = new Gateway("LoanReply.Broker", "LoanRequest.Client", "Test"){
             @Override
             public void messageReceived(RequestReply rr){
-//                int index = getRequestReply((Financiering) rr.getRequest());
-//                RequestReply rr2 = listModel.get(index);
-//                rr2.setReply(rr.getReply());
-//                requestReplyList.repaint();
                 Resultaat s = (Resultaat) rr.getReply();
                 getRequestReply(s);
                 System.out.println(s);
+                
+//                int index = getRequestReply((Resultaat) rr.getReply());
+//                RequestReply rr2 = listModel.get(index);
+//                rr2.setReply(rr.getReply());
+//                requestReplyList.repaint();
             }
         };
 
@@ -209,8 +210,6 @@ public class AanvragerFrame extends JFrame {
         for (int i = 0; i < listModel.getSize(); i++) {
             RequestReply<Financiering, Resultaat> rr = listModel.get(i);
             if (rr.getRequest().getHash().equals(financiering.getHash())) {
-                listModel.clear();
-                listModel.addElement(rr);
                 return i;
             }
         }
